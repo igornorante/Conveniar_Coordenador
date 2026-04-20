@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginActivity">
+
+
+    <ImageView
+        android:id="@+id/logo_login"
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:src="@drawable/logo_fundo_branco"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp">
+
+    </ImageView>
+
+    <TextView
+        android:id="@+id/txt_portal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Portal do Coordenador"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/azul_conveniar"
+        android:layout_below="@id/logo_login"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/txt_usuario_senha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Entre com seu Usuário e Senha"
+        android:layout_below="@+id/txt_portal"
+        android:textSize="17sp"
+        android:layout_marginTop="70dp"
+        android:layout_centerHorizontal="true">
+
+    </TextView>
+
+    <EditText
+        android:id="@+id/usuario"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_usuario_senha"
+        android:textSize="17sp"
+        android:layout_marginTop="30dp"
+        android:typeface="normal"
+        android:layout_centerHorizontal="true"
+        android:hint="Usuário">
+
+    </EditText>
+
+    <EditText
+        android:id="@+id/senha"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/usuario"
+        android:textSize="17sp"
+        android:typeface="normal"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:hint="Senha">
+
+    </EditText>
+
+    <Button
+        android:id="@+id/login_botao_entrar"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:text="Entrar"
+        android:backgroundTint="@color/azul_conveniar"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/senha">
+
+    </Button>
+
+    <TextView
+        android:id="@+id/txt_perdeu_senha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_botao_entrar"
+        android:textSize="15sp"
+        android:layout_marginTop="40dp"
+        android:layout_centerHorizontal="true"
+        android:hint="Perdeu a senha?"
+        android:clickable="true">
+
+    </TextView>
+
+<!--    <TextView-->
+<!--        android:id="@+id/txt_politica"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Politica de Privacidade"-->
+<!--        android:layout_below="@+id/txt_perdeu_senha"-->
+<!--        android:layout_marginTop="150dp"-->
+<!--        android:layout_marginLeft="20dp">-->
+
+<!--    </TextView>-->
+
+<!--    <TextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Informações"-->
+<!--        android:layout_below="@+id/txt_perdeu_senha"-->
+<!--        android:layout_marginTop="150dp"-->
+<!--        android:layout_marginLeft="150dp"-->
+<!--        android:layout_toRightOf="@id/txt_politica">-->
+
+<!--    </TextView>-->
+
+
+</RelativeLayout>
