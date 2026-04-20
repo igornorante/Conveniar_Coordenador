@@ -1,0 +1,49 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="">
+        <menu>
+
+            <item
+                android:id="@+id/opc_inicio"
+                android:title="Início"
+                android:icon="@drawable/icone_home"/>
+
+            <item
+                android:id="@+id/opc_consultas"
+                android:title="Consultas"
+                android:icon="@drawable/icone_lupa"/>
+
+            <item
+                android:id="@+id/opc_extrato"
+                android:title="Extrato"
+                android:icon="@drawable/icone_extrato"/>
+
+            <item
+                android:id="@+id/opc_saldo"
+                android:title="Saldo"
+                android:icon="@drawable/icone_saldo"/>
+
+            <item
+                android:id="@+id/opc_saldo_executado"
+                android:title="Saldo Executado"
+                android:icon="@drawable/icone_saldo_executado"/>
+
+            <item
+                android:id="@+id/opc_pedidos"
+                android:title="Pedidos"
+                android:icon="@drawable/icone_pedido"/>
+
+        </menu>
+    </item>
+
+    <!-- Separador -->
+    <item android:title="">
+        <menu>
+            <item
+                android:id="@+id/opc_sair"
+                android:title="Sair"
+                android:icon="@drawable/icone_sair"/>
+        </menu>
+    </item>
+
+</menu>

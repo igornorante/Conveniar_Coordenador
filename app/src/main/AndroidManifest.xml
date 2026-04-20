@@ -12,6 +12,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Conveniar_Coordenador">
         <activity
+            android:name=".PedidosActivity"
+            android:exported="false" />
+        <activity
+            android:name=".InformacoesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PoliticaActivity"
+            android:exported="false" />
+        <activity
             android:name=".PrincipalActivity"
             android:exported="false"
             android:label="@string/title_activity_principal"

@@ -1,11 +1,9 @@
 package com.example.conveniar_coordenador;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,13 +11,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class LoginActivity extends AppCompatActivity {
+public class PoliticaActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_politica);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -30,27 +28,14 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        TextView txt_politica = (TextView)findViewById(R.id.txt_politica);
-        TextView txt_informacoes = (TextView)findViewById(R.id.txt_informacoes);
-        Button botao_entrar = (Button)findViewById(R.id.login_botao_entrar);
-
-        txt_politica.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, PoliticaActivity.class);
-            startActivity(intent);
-        });
-
-        txt_informacoes.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, InformacoesActivity.class);
-            startActivity(intent);
-        });
-
-        botao_entrar.setOnClickListener(new View.OnClickListener() {
+        Button botao_sair = (Button)findViewById(R.id.politica_botao_sair);
+        botao_sair.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, PedidosActivity.class);
-                startActivity(intent);
+                Intent it = new Intent(PoliticaActivity.this, LoginActivity.class);
+                startActivity(it);
+                finish();
             }
         });
-
     }
 }

@@ -3,4 +3,24 @@
     <string name="title_activity_principal">PrincipalActivity</string>
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
+    <string name="texto_politica">Agradecemos a sua visita ao Sistema Conveniar, ferramenta utilizada para realizar a gestão de projetos desta fundação de forma eficiente, segura e com qualidade.\n\n
+Neste espaço, divulgamos a política de utilização dos seus dados pessoais. Assim, você poderá entender melhor quais informações obtemos e como as utilizamos. Dedique alguns minutos do seu tempo para ler essa política e aproveitar de forma consciente e segura tudo o que o Conveniar tem para oferecer.\n\n
+O acesso ao sistema Conveniar deve ser feito sempre a partir da página oficial da fundação: www.fundacao.org.br\n\n
+As informações coletadas sobre você neste sistema destinam-se a verificar seu registro como usuário autorizado pela fundação, processar e personalizar suas ações no sistema.\n\n
+Mantemos a privacidade das informações pessoais compartilhadas conosco. Seu nome e os dados de identificação não serão utilizados para outro fim senão a gestão dos projetos pela fundação, não sendo, de maneira alguma, compartilhados com terceiros.\n\n
+Durante o registro no Conveniar, você será solicitado a inserir seu Usuário e Senha. Esta senha não deve ser compartilhada com ninguém, nem mesmo com outros funcionários da fundação.\n\n
+Suas informações pessoais podem ser atualizadas ao entrar no sistema através do item do menu “Dados Pessoais” -&gt; “Pessoa Física”. Estas informações são utilizadas, quando necessárias em algum procedimento referente aos seus projetos. Também é possível alterar seu e-mail e sua senha através do item de menu “Dados Pessoais” -&gt; “Usuário”.\n\n
+Toda vez que o usuário entra no sistema, o Conveniar registra qual usuário fez o registro, a data e hora que acessou e o IP do computador de onde foi acessado. Este procedimento é importante para garantir a segurança dos usuários e só serão consultadas caso uma auditoria seja necessária. Esta consulta só será realizada por funcionário autorizado da fundação.\n\n
+A fundação não é responsável pelo conteúdo disponibilizado por outros Sites, ainda que mencionados neste Portal, restringindo-se apenas aos serviços oferecidos nas páginas deste Portal.\n\n
+<b>Alterações e Versões da Política de Privacidade</b>\n\n
+Essa política de privacidade poderá ser alterada a qualquer momento; todas as alterações serão publicadas nesta página da Web. As informações coletadas quando determinada versão da política estiver em vigor serão manipuladas de acordo com a versão.\n\n
+Se ainda tiver dúvidas, comentários ou reclamações contate a fundação.</string>
+    <string name="texto_informacoes"><b>Bem vindo ao Portal do Coordenador</b>\n\n
+Prezado Coordenador,\n\n
+Este portal é a ferramenta de gestão dos seus projetos e sua principal ferramenta de comunicação com a fundação.\n
+Através dele é possível acompanhar, em tempo real, o saldo e extrato dos seus projetos, fazer pedidos de compras, pagamentos e recebimentos, emitir parecer de compras, organizar eventos e monitorar o andamento de seus pedidos na fundação.\n\n
+<b>Atenção:</b> não forneça sua senha para terceiros, pois é a sua assinatura no portal.\n
+Caso seja necessário, solicite à fundação a criação de uma senha para a pessoa a quem deseja autorizar acesso aos seus projetos.\n
+O Conveniar sempre registra quem acessou o sistema, qual o computador utilizado e a data e hora do acesso.</string>
+
 </resources>

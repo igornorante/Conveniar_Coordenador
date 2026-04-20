@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:background="@color/azul_conveniar"
+    android:elevation="4dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Ícone de menu (hamburguer) -->
+        <ImageView
+            android:id="@+id/menu_header"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/menu_hamburguer"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="16dp"
+            app:tint="@color/white"
+            android:clickable="true"/>
+
+        <!-- Logo -->
+        <ImageView
+            android:id="@+id/logo_header"
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+            android:src="@drawable/logo_fundo_azul"
+            android:layout_centerInParent="true"/>
+
+    </RelativeLayout>
+
+</androidx.appcompat.widget.Toolbar>

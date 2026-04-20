@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".InformacoesActivity">
+
+        <TextView
+            android:id="@+id/txt_informacoes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Informações"
+            android:textAlignment="center"
+            android:textSize="30dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/borda"
+            >
+        </TextView>
+
+        <TextView
+            android:id="@+id/texto_informacoes1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/txt_informacoes"
+            android:text="@string/texto_informacoes"
+            android:layout_margin="10dp"
+            android:background="@color/cardview_light_background">
+        </TextView>
+
+        <Button
+            android:id="@+id/informacoes_botao_sair"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Fechar"
+            android:backgroundTint="@color/azul_conveniar"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/texto_informacoes1">
+        </Button>
+
+    </RelativeLayout>
+</ScrollView>

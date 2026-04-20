@@ -93,27 +93,30 @@
 
     </TextView>
 
-<!--    <TextView-->
-<!--        android:id="@+id/txt_politica"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Politica de Privacidade"-->
-<!--        android:layout_below="@+id/txt_perdeu_senha"-->
-<!--        android:layout_marginTop="150dp"-->
-<!--        android:layout_marginLeft="20dp">-->
+    <TextView
+        android:id="@+id/txt_politica"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Politica de Privacidade"
+        android:layout_below="@+id/txt_perdeu_senha"
+        android:layout_marginTop="150dp"
+        android:layout_marginLeft="20dp"
+        android:clickable="true">
 
-<!--    </TextView>-->
+    </TextView>
 
-<!--    <TextView-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Informações"-->
-<!--        android:layout_below="@+id/txt_perdeu_senha"-->
-<!--        android:layout_marginTop="150dp"-->
-<!--        android:layout_marginLeft="150dp"-->
-<!--        android:layout_toRightOf="@id/txt_politica">-->
+    <TextView
+        android:id="@+id/txt_informacoes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Informações"
+        android:layout_below="@+id/txt_perdeu_senha"
+        android:layout_marginTop="150dp"
+        android:layout_marginLeft="150dp"
+        android:layout_toRightOf="@id/txt_politica"
+        android:clickable="true"
+        >
 
-<!--    </TextView>-->
-
+    </TextView>
 
 </RelativeLayout>
