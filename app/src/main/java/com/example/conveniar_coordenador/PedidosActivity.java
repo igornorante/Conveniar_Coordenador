@@ -1,6 +1,8 @@
 package com.example.conveniar_coordenador;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -13,11 +15,12 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.material.navigation.NavigationView;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class PedidosActivity extends AppCompatActivity {
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +40,27 @@ public class PedidosActivity extends AppCompatActivity {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ImageView btnMenu = findViewById(R.id.menu_header);
 
+
         btnMenu.setOnClickListener(v -> {
             drawer.openDrawer(GravityCompat.START);
+        });
+
+
+        //Tratamento de clique das opções do menu lateral
+        NavigationView navigationView = findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+
+            //Opção Sair
+            if (id == R.id.opc_sair) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+
+                drawer.closeDrawer(GravityCompat.START);
+                finish();
+                return true;
+            }
+            return true;
         });
 
         ListView lista_opcoes = (ListView) findViewById(R.id.list_opcoes_pedidos);
@@ -52,7 +74,6 @@ public class PedidosActivity extends AppCompatActivity {
         lista.add(new ItemMenu("Pagamento de Diárias/Frete", R.drawable.icone_diaria));
         lista.add(new ItemMenu("Pagamento de Bolsa", R.drawable.icone_pag_bolsa));
         lista.add(new ItemMenu("Pagamento de Pessoa Jurídica", R.drawable.icone_pag_juridica));
-        lista.add(new ItemMenu("Pagamento de Pessoa Física", R.drawable.icone_pag_fisica));
         lista.add(new ItemMenu("Pagamento de Pessoa Física", R.drawable.icone_pag_fisica));
         lista.add(new ItemMenu("Entrada de Receita", R.drawable.icone_entradareceita));
         lista.add(new ItemMenu("Transferência Entre Projetos", R.drawable.icone_transferencia));
