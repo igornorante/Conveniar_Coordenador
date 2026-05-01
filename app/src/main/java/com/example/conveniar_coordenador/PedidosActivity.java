@@ -1,7 +1,9 @@
 package com.example.conveniar_coordenador;
 
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,7 +13,11 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PedidosActivity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,5 +40,29 @@ public class PedidosActivity extends AppCompatActivity {
         btnMenu.setOnClickListener(v -> {
             drawer.openDrawer(GravityCompat.START);
         });
+
+        ListView lista_opcoes = (ListView) findViewById(R.id.list_opcoes_pedidos);
+
+        List<ItemMenu> lista = new ArrayList<>();
+
+        lista.add(new ItemMenu("Compra/Serviço", R.drawable.icone_compra));
+        lista.add(new ItemMenu("Adiantamento", R.drawable.icone_adiantamento));
+        lista.add(new ItemMenu("Acerto de Adiantamento", R.drawable.icone_acertoadiantamento));
+        lista.add(new ItemMenu("Reembolso", R.drawable.icone_reembolso));
+        lista.add(new ItemMenu("Pagamento de Diárias/Frete", R.drawable.icone_diaria));
+        lista.add(new ItemMenu("Pagamento de Bolsa", R.drawable.icone_pag_bolsa));
+        lista.add(new ItemMenu("Pagamento de Pessoa Jurídica", R.drawable.icone_pag_juridica));
+        lista.add(new ItemMenu("Pagamento de Pessoa Física", R.drawable.icone_pag_fisica));
+        lista.add(new ItemMenu("Pagamento de Pessoa Física", R.drawable.icone_pag_fisica));
+        lista.add(new ItemMenu("Entrada de Receita", R.drawable.icone_entradareceita));
+        lista.add(new ItemMenu("Transferência Entre Projetos", R.drawable.icone_transferencia));
+        lista.add(new ItemMenu("Parecer Técnico", R.drawable.icone_transferencia)); //Falta icone
+        lista.add(new ItemMenu("Pagamento de Bolsa em Lote", R.drawable.icone_transferencia)); //Falta icone
+        lista.add(new ItemMenu("Ordens de Pagamento de AF/OS", R.drawable.icone_transferencia)); //Falta icone
+        lista.add(new ItemMenu("Contratação de Pessoas", R.drawable.icone_transferencia)); //Falta icone
+
+
+        MenuAdapter adapter = new MenuAdapter(this, lista);
+        lista_opcoes.setAdapter(adapter);
     }
 }

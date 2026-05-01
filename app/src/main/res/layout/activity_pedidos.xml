@@ -8,10 +8,6 @@
     android:layout_height="match_parent">
 
     <!-- CONTEÚDO PRINCIPAL -->
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
         <RelativeLayout
             android:id="@+id/main"
             android:layout_width="match_parent"
@@ -37,12 +33,13 @@
             <ListView
                 android:id="@+id/list_opcoes_pedidos"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txt_pedidos"/>
+                android:layout_height="match_parent"
+                android:layout_below="@+id/txt_pedidos"
+                android:divider="#33000000"
+                android:dividerHeight="1dp"/>
 
         </RelativeLayout>
 
-    </ScrollView>
 
     <!-- MENU LATERAL -->
     <com.google.android.material.navigation.NavigationView
