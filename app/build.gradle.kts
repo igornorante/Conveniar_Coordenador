@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
 }
@@ -18,7 +20,23 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        //Parte que necessária para buscar informações do local.properties
+        val properties = Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            properties.load(localPropertiesFile.inputStream())
+        }
+
+        buildConfigField("String", "API_KEY", "\"${properties.getProperty("API_KEY")}\"")
+        buildConfigField("String", "BASE_URL", "\"${properties.getProperty("BASE_URL")}\"")
     }
+
+    buildFeatures {
+        // Habilita a geração da classe BuildConfig
+        buildConfig = true
+    }
+
 
     buildTypes {
         release {
@@ -48,4 +66,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation("com.squareup.retrofit2:retrofit:2.9.0") //Cliente HTTP principal para consumir a API
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0") // Para converter JSON em Objetos Java
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0") //Para imprimir requisições e respostas no Logcat
 }
