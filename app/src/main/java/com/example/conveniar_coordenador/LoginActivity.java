@@ -54,3 +54,50 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 }
+
+/*
+    Estou deixando o código que usei para realizar o login aqui, depois basta adaptar para a tela de login que você fez:
+
+    String usuarioDigitado = "...";
+    String senhaDigitada = "...";
+
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        TokenGenerator.gerarToken(usuarioDigitado, senhaDigitada, new TokenGenerator.TokenCallback() {
+
+            @Override
+            public void onTokenGerado(String token) {
+                Log.d("FLUXO_API", "Token gerado com sucesso: " + token);
+
+                // Requisicao de eventos usando o token
+                Coordenador.getEventosUsuario(token, 1, 50, new okhttp3.Callback() {
+                    @Override
+                    public void onFailure(okhttp3.Call call, java.io.IOException e) {
+                        Log.e("FLUXO_API", "Erro ao buscar eventos: " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(okhttp3.Call call, okhttp3.Response response) throws java.io.IOException {
+                        if (response.isSuccessful() && response.body() != null) {
+                            String jsonEventos = response.body().string();
+                            Log.d("FLUXO_API", "Eventos carregados: " + jsonEventos);
+
+                            // Lembre-se: Para mostrar isso na tela, use runOnUiThread()
+                        } else {
+                            Log.e("FLUXO_API", "Falha ao carregar eventos. Código: " + response.code());
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onErro(String mensagem) {
+                Log.e("FLUXO_API", "Erro no processo: " + mensagem);
+            }
+        });
+    }
+
+
+ */
