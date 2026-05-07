@@ -16,7 +16,7 @@ public class Coordenador {
         Request request = new Request.Builder()
                 .url(BASE_URL + "usuario")
                 .addHeader("accept", "application/json")
-                .addHeader("Authorization", "Bearer " + token)
+                .addHeader("Authorization", "Basic " + token)
                 .addHeader("X-API-KEY", API_KEY)
                 .get()
                 .build();
