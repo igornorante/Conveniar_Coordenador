@@ -8,15 +8,15 @@ import okhttp3.Request;
 //Classe utilizada para organizar as requisições, pode evoluir para guardar dados do Coordenador
 public class Coordenador {
 
-    private static final String BASE_URL =  BuildConfig.BASE_URL;
-    private static final String API_KEY =  BuildConfig.API_KEY;
+    private static final String BASE_URL = "https://api.conveniar.com.br/coordenador/";
+    private static final String API_KEY = "7e61b6bb-6841-415f-954e-5e2ba445cc7c";
 
     // 1. Rota: /usuario
     public static void getUsuario(String token, Callback callback) {
         Request request = new Request.Builder()
                 .url(BASE_URL + "usuario")
                 .addHeader("accept", "application/json")
-                .addHeader("Authorization", "Basic " + token)
+                .addHeader("Authorization", "Bearer " + token)
                 .addHeader("X-API-KEY", API_KEY)
                 .get()
                 .build();
@@ -43,4 +43,6 @@ public class Coordenador {
 
         ApiClient.getInstance().newCall(request).enqueue(callback);
     }
+
+
 }
