@@ -8,8 +8,13 @@ import okhttp3.Request;
 //Classe utilizada para organizar as requisições, pode evoluir para guardar dados do Coordenador
 public class Coordenador {
 
-    private static final String BASE_URL = "https://api.conveniar.com.br/coordenador/";
-    private static final String API_KEY = "7e61b6bb-6841-415f-954e-5e2ba445cc7c";
+    //private static final String BASE_URL = "https://api.conveniar.com.br/coordenador/";
+    //private static final String API_KEY = "7e61b6bb-6841-415f-954e-5e2ba445cc7c";
+
+    private static final String BASE_URL = BuildConfig.BASE_URL + "coordenador/";
+    private static final String API_KEY = BuildConfig.API_KEY;
+
+
 
     // 1. Rota: /usuario
     public static void getUsuario(String token, Callback callback) {

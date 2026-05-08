@@ -27,7 +27,7 @@ public class TokenGenerator {
     }
 
     public static void gerarToken(String username, String password, TokenCallback callback) {
-        String url = BuildConfig.BASE_URL;
+        String url = BuildConfig.BASE_URL + "token/coordenador";
         String apiKey = BuildConfig.API_KEY;
 
         // 1. Auntenticação
