@@ -18,6 +18,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.example.conveniar_coordenador.model.Projeto;
 import com.google.android.material.navigation.NavigationView;
 
+import com.example.conveniar_coordenador.DAO.ProjetoDAO;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -78,15 +79,21 @@ public class ProjetosActivity extends AppCompatActivity {
                 return true;
             }
             else if (id == R.id.opc_projetos) {
-                Intent intent = new Intent(this, ProjetosActivity.class);
+                drawer.closeDrawer(GravityCompat.START);
+                return true;
+            }
+
+            else if (id == R.id.opc_pedidos) {
+                Intent intent = new Intent(this, PedidosActivity.class);
                 intent.putExtra("TOKEN", token);
                 startActivity(intent);
 
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
             }
-            else if (id == R.id.opc_pedidos) {
-                Intent intent = new Intent(this, PedidosActivity.class);
+
+            else if(id == R.id.opc_saldo){
+                Intent intent = new Intent(this, SaldoActivity.class);
                 intent.putExtra("TOKEN", token);
                 startActivity(intent);
 
@@ -119,23 +126,19 @@ public class ProjetosActivity extends AppCompatActivity {
             public void onResponse(okhttp3.Call call, okhttp3.Response response) throws java.io.IOException {
                 if (response.isSuccessful() && response.body() != null) {
                     String json = response.body().string();
+                    Log.d("FLUXO_API", "JSON bruto projetos: " + json);
 
                     try {
-                        JSONArray array = new JSONArray(json);
+                        List<Projeto> projetosRecebidos = ProjetoDAO.fromJson(json);
 
-                        List<Projeto> projetosRecebidos = new ArrayList<>();
+                        Log.d("FLUXO_API", "Quantidade de projetos recebidos: " + projetosRecebidos.size());
 
-                        for (int i = 0; i < array.length(); i++) {
-                            JSONObject obj = array.getJSONObject(i);
-
-                            Projeto projeto = new Projeto(
-                                    obj.optInt("codProjeto"),
-                                    obj.optString("nomeConvenio"),
-                                    obj.optDouble("saldo"),
-                                    obj.optString("nomeStatus")
-                            );
-
-                            projetosRecebidos.add(projeto);
+                        for (Projeto projeto : projetosRecebidos) {
+                            Log.d("FLUXO_API",
+                                    "Projeto -> codProjeto: " + projeto.getCodConvenio()
+                                            + " | nome: " + projeto.getNomeConvenio()
+                                            + " | status: " + projeto.getNomeStatus()
+                                            + " | saldo: " + projeto.getSaldo());
                         }
 
                         runOnUiThread(() -> {
@@ -145,7 +148,7 @@ public class ProjetosActivity extends AppCompatActivity {
                         });
 
                     } catch (Exception e) {
-                        Log.e("FLUXO_API", "Erro ao processar JSON: " + e.getMessage());
+                        Log.e("FLUXO_API", "Erro ao processar JSON: " + e.getMessage(), e);
                     }
 
                 } else {

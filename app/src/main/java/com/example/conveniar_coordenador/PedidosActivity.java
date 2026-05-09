@@ -71,6 +71,15 @@ public class PedidosActivity extends AppCompatActivity {
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
             }
+
+            else if(id == R.id.opc_saldo){
+                Intent intent = new Intent(this, SaldoActivity.class);
+                intent.putExtra("TOKEN", token);
+                startActivity(intent);
+
+                drawer.closeDrawer(GravityCompat.START);
+                return true;
+            }
             return true;
         });
 

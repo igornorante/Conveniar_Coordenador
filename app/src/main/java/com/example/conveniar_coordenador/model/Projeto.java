@@ -1,23 +1,25 @@
 package com.example.conveniar_coordenador.model;
 
-import java.io.Serializable;
+public class Projeto {
 
-public class Projeto implements Serializable {
-
-    private int codProjeto;
+    private int codConvenio;
     private String nomeConvenio;
     private double saldo;
     private String nomeStatus;
+    private String coordenador;
+    private String dataVigencia;
 
-    public Projeto(int codProjeto, String nomeConvenio, double saldo, String nomeStatus) {
-        this.codProjeto = codProjeto;
+    public Projeto(int codConvenio, String nomeConvenio, double saldo, String nomeStatus, String coordenador, String dataVigencia) {
+        this.codConvenio = codConvenio;
         this.nomeConvenio = nomeConvenio;
         this.saldo = saldo;
         this.nomeStatus = nomeStatus;
+        this.coordenador = coordenador;
+        this.dataVigencia = dataVigencia;
     }
 
-    public int getCodProjeto() {
-        return codProjeto;
+    public int getCodConvenio() {
+        return codConvenio;
     }
 
     public String getNomeConvenio() {
@@ -32,8 +34,16 @@ public class Projeto implements Serializable {
         return nomeStatus;
     }
 
+    public String getCoordenador() {
+        return coordenador;
+    }
+
+    public String getDataVigencia() {
+        return dataVigencia;
+    }
+
     @Override
     public String toString() {
-        return nomeConvenio + "\nSaldo: " + saldo + " | Status: " + nomeStatus;
+        return codConvenio + " - " + nomeConvenio;
     }
 }
