@@ -29,6 +29,9 @@
             android:name=".PoliticaActivity"
             android:exported="false" />
         <activity
+            android:name=".ExtratoActivity"
+            android:exported="false" />
+        <activity
             android:name=".PrincipalActivity"
             android:exported="false"
             android:label="@string/title_activity_principal"

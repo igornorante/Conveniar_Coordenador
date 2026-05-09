@@ -54,6 +54,13 @@ public class PedidosActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
 
+            if (id == R.id.opc_extrato) {
+                Intent intent = new Intent(this, ExtratoActivity.class);
+                startActivity(intent);
+                drawer.closeDrawer(GravityCompat.START);
+                return true;
+            }
+
             //Opção Sair
             if (id == R.id.opc_sair) {
                 Intent intent = new Intent(this, LoginActivity.class);
@@ -105,5 +112,6 @@ public class PedidosActivity extends AppCompatActivity {
 
         MenuAdapter adapter = new MenuAdapter(this, lista);
         lista_opcoes.setAdapter(adapter);
+
     }
 }
