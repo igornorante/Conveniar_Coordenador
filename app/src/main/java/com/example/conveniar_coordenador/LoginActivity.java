@@ -53,8 +53,8 @@ public class LoginActivity extends AppCompatActivity {
                 EditText usuario = (EditText)findViewById(R.id.usuario);
                 EditText senha = (EditText)findViewById(R.id.senha);
 
-                String usuarioDigitado = "igor.admin";
-                String senhaDigitada = "Grupo5@1234";
+                String usuarioDigitado = usuario.getText().toString();
+                String senhaDigitada = senha.getText().toString();
 
                 TokenGenerator.gerarToken(usuarioDigitado, senhaDigitada, new TokenGenerator.TokenCallback() {
                     @Override
@@ -77,6 +77,12 @@ public class LoginActivity extends AppCompatActivity {
                                 }
                             }
                         });
+
+                        runOnUiThread(() -> {
+                            Intent intent = new Intent(LoginActivity.this, PedidosActivity.class);
+                            intent.putExtra("TOKEN", token);
+                            startActivity(intent);
+                        });
                     }
 
                     @Override
@@ -84,9 +90,6 @@ public class LoginActivity extends AppCompatActivity {
                         Log.e("FLUXO_API", "Erro no processo: " + mensagem);
                     }
                 });
-
-                Intent intent = new Intent(LoginActivity.this, PedidosActivity.class);
-                startActivity(intent);
             }
         });
 

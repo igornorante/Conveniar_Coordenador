@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PedidosActivity extends AppCompatActivity {
-
+    private String token;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +32,9 @@ public class PedidosActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        token = getIntent().getStringExtra("TOKEN");
+
     }
 
     @Override
@@ -58,6 +61,14 @@ public class PedidosActivity extends AppCompatActivity {
 
                 drawer.closeDrawer(GravityCompat.START);
                 finish();
+                return true;
+            }
+            else if (id == R.id.opc_projetos) {
+                Intent intent = new Intent(this, ProjetosActivity.class);
+                intent.putExtra("TOKEN", token);
+                startActivity(intent);
+
+                drawer.closeDrawer(GravityCompat.START);
                 return true;
             }
             return true;

@@ -9,6 +9,11 @@
                 android:icon="@drawable/icone_home"/>
 
             <item
+                android:id="@+id/opc_projetos"
+                android:title="Projetos"
+                android:icon="@drawable/icone_projetos"/>
+
+            <item
                 android:id="@+id/opc_consultas"
                 android:title="Consultas"
                 android:icon="@drawable/icone_lupa"/>
