@@ -65,7 +65,8 @@
         android:typeface="normal"
         android:layout_marginTop="10dp"
         android:layout_centerHorizontal="true"
-        android:hint="Senha">
+        android:hint="Senha"
+        android:inputType="textPassword" >
 
     </EditText>
 

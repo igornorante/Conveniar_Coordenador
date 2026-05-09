@@ -49,5 +49,39 @@ public class Coordenador {
         ApiClient.getInstance().newCall(request).enqueue(callback);
     }
 
+    public static void getProjetos(
+            String token,
+            String projeto,
+            String situacao,
+            int pagina,
+            int limite,
+            Callback callback
+    ) {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "projetos").newBuilder();
+
+        if (projeto != null && !projeto.isEmpty()) {
+            urlBuilder.addQueryParameter("projeto", projeto);
+        }
+
+        if (situacao != null && !situacao.isEmpty()) {
+            urlBuilder.addQueryParameter("situacao", situacao);
+        }
+
+        urlBuilder.addQueryParameter("pagina", String.valueOf(pagina));
+        urlBuilder.addQueryParameter("limite", String.valueOf(limite));
+
+        String url = urlBuilder.build().toString();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("accept", "application/json")
+                .addHeader("Authorization", "Bearer " + token)
+                .addHeader("X-API-KEY", API_KEY)
+                .get()
+                .build();
+
+        ApiClient.getInstance().newCall(request).enqueue(callback);
+    }
+
 
 }
