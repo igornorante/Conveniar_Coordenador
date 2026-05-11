@@ -78,6 +78,13 @@ public class ProjetosActivity extends AppCompatActivity {
                 finish();
                 return true;
             }
+            else if (id == R.id.opc_extrato) {
+                Intent intent = new Intent(this, ExtratoActivity.class);
+                intent.putExtra("TOKEN", token);
+                startActivity(intent);
+                drawer.closeDrawer(GravityCompat.START);
+                return true;
+            }
             else if (id == R.id.opc_projetos) {
                 drawer.closeDrawer(GravityCompat.START);
                 return true;

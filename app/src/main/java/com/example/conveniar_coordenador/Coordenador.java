@@ -1,5 +1,7 @@
 package com.example.conveniar_coordenador;
 
+import android.util.Log;
+
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
 import okhttp3.Request;
@@ -82,6 +84,35 @@ public class Coordenador {
 
         ApiClient.getInstance().newCall(request).enqueue(callback);
     }
+
+    public static void getExtratoSimplificado(
+            String token,
+            int codProjeto,
+            String dataInicio,
+            String dataFim,
+            Callback callback
+    ) {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "extrato-simplificado").newBuilder();
+
+        urlBuilder.addQueryParameter("CodProjeto", String.valueOf(codProjeto));
+        urlBuilder.addQueryParameter("DataInicial", dataInicio);
+        urlBuilder.addQueryParameter("DataFinal", dataFim);
+
+        String url = urlBuilder.build().toString();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("accept", "application/json")
+                .addHeader("Authorization", "Bearer " + token)
+                .addHeader("X-API-KEY", API_KEY)
+                .get()
+                .build();
+
+        Log.d("FLUXO_API", "URL EXATA DO APP: " + request.url().toString());
+
+        ApiClient.getInstance().newCall(request).enqueue(callback);
+    }
+
 
 
 }

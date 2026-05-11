@@ -56,11 +56,11 @@ public class PedidosActivity extends AppCompatActivity {
 
             if (id == R.id.opc_extrato) {
                 Intent intent = new Intent(this, ExtratoActivity.class);
+                intent.putExtra("TOKEN", token);
                 startActivity(intent);
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
             }
-
             //Opção Sair
             if (id == R.id.opc_sair) {
                 Intent intent = new Intent(this, LoginActivity.class);
