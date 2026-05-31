@@ -1,11 +1,14 @@
 package com.example.conveniar_coordenador;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -113,5 +116,82 @@ public class PedidosActivity extends AppCompatActivity {
         MenuAdapter adapter = new MenuAdapter(this, lista);
         lista_opcoes.setAdapter(adapter);
 
+        lista_opcoes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Navegar_Portal(position);
+            }
+        });
+
+    }
+
+    public void Navegar_Portal(int posicao){
+        Uri uri = null;
+
+        switch (posicao){
+
+            case 0: // Compra/Serviço
+                uri = Uri.parse("https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PedidoCompra.aspx");
+                break;
+
+            case 1: // Adiantamento
+                uri = Uri.parse("https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PagamentoAdiantamento.aspx");
+                break;
+
+            case 2: // Acerto de Adiantamento
+                uri = Uri.parse("https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PedidoAcertoAdiantamento.aspx");
+                break;
+
+            case 3: // Reembolso
+                uri = Uri.parse("https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PagamentoReembolso.aspx");
+                break;
+
+            case 4: // Pagamento de Diárias/Frete
+                uri = Uri.parse("https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PagamentoDiaria.aspx");
+                break;
+
+            case 5: // Pagamento de Bolsa
+                uri = Uri.parse("https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PagamentoBolsa.aspx");
+                break;
+
+            case 6: // Pessoa Jurídica
+                uri = Uri.parse("https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PagamentoPessoaJuridica.aspx");
+                break;
+
+            case 7: // Pessoa Física
+                uri = Uri.parse("https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PagamentoPessoaFisica.aspx");
+                break;
+
+            case 8: // Entrada de Receita
+                uri = Uri.parse("https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/EntradaDeReceita.aspx");
+                break;
+
+            case 9: // Transferência Entre Projetos
+                uri = Uri.parse("https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PagamentoTransferencia.aspx");
+                break;
+
+            case 10: // Parecer Técnico
+                uri = Uri.parse("https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PedidoParecerTecnico.aspx");
+                break;
+
+            case 11: // Bolsa em Lote
+                uri = Uri.parse("https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PagamentoBolsaLote.aspx");
+                break;
+
+            case 12: // OP AF/OS
+                uri = Uri.parse("https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/OPCompraAF.aspx");
+                break;
+
+            case 13: // Contratação de Pessoas
+                uri = Uri.parse("https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PedidoContratacao.aspx");
+                break;
+
+            default:
+                Toast.makeText(this, "Opção inválida", Toast.LENGTH_SHORT).show();
+                return;
+        }
+
+        Intent it_site = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(it_site);
     }
 }
