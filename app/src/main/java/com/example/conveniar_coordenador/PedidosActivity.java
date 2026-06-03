@@ -57,39 +57,33 @@ public class PedidosActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
 
-            if (id == R.id.opc_extrato) {
-                Intent intent = new Intent(this, ExtratoActivity.class);
-                intent.putExtra("TOKEN", token);
-                startActivity(intent);
-                drawer.closeDrawer(GravityCompat.START);
-                return true;
-            }
-            //Opção Sair
-            if (id == R.id.opc_sair) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
-
-                drawer.closeDrawer(GravityCompat.START);
-                finish();
-                return true;
-            }
-            else if (id == R.id.opc_projetos) {
+            if (id == R.id.opc_projetos) {
                 Intent intent = new Intent(this, ProjetosActivity.class);
                 intent.putExtra("TOKEN", token);
                 startActivity(intent);
-
-                drawer.closeDrawer(GravityCompat.START);
-                return true;
-            }
-
-            else if(id == R.id.opc_saldo){
+            } else if (id == R.id.opc_extrato) {
+                Intent intent = new Intent(this, ExtratoActivity.class);
+                intent.putExtra("TOKEN", token);
+                startActivity(intent);
+            } else if (id == R.id.opc_saldo) {
                 Intent intent = new Intent(this, SaldoActivity.class);
                 intent.putExtra("TOKEN", token);
                 startActivity(intent);
-
+            } else if (id == R.id.opc_consultas) {
+                Intent intent = new Intent(this, ConsultaActivity.class);
+                intent.putExtra("TOKEN", token);
+                startActivity(intent);
+            } else if (id == R.id.opc_pedidos) {
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
+            } else if (id == R.id.opc_sair) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finishAffinity();
+                return true;
             }
+
+            drawer.closeDrawer(GravityCompat.START);
             return true;
         });
 

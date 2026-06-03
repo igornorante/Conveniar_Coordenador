@@ -103,7 +103,9 @@ public class ExtratoActivity extends AppCompatActivity {
                                     obj.optInt("codConvenio"),
                                     obj.optString("nomeConvenio"),
                                     obj.optDouble("saldo"),
-                                    obj.optString("nomeStatus")
+                                    obj.optString("nomeStatus"),
+                                    obj.optString("coordenador"),
+                                    obj.optString("dataVigencia")
                             );
                             listaProjetos.add(projeto);
                             nomesProjetos.add(projeto.getNomeConvenio());
@@ -144,22 +146,50 @@ public class ExtratoActivity extends AppCompatActivity {
             String dataInicio = edtDataInicio.getText().toString();
             String dataFim = edtDataFim.getText().toString();
 
-            if (posicaoSelecionada == 0 || dataInicio.isEmpty() || dataFim.isEmpty()) {
+            if (posicaoSelecionada <= 0 || dataInicio.isEmpty() || dataFim.isEmpty()) {
                 Toast.makeText(this, "Preencha todos os filtros!", Toast.LENGTH_SHORT).show();
             } else {
+                
+                // Validação de intervalo de datas para evitar erro 500 na API
+                try {
+                    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale.US);
+                    java.util.Date dateInicio = sdf.parse(dataInicio);
+                    java.util.Date dateFim = sdf.parse(dataFim);
+                    
+                    if (dateInicio != null && dateFim != null && dateInicio.after(dateFim)) {
+                        Toast.makeText(this, "A data de início não pode ser maior que a data final.", Toast.LENGTH_LONG).show();
+                        return; // Interrompe a chamada à API
+                    }
+                } catch (Exception e) {
+                    Log.e("DEBUG_EXTRATO", "Erro ao validar datas: " + e.getMessage());
+                }
+
                 Projeto projetoSelecionado = listaProjetos.get(posicaoSelecionada - 1);
 
-                Log.d("DEBUG_EXTRATO", "ID Enviado para a API: " + projetoSelecionado.getCodProjeto());
+                Log.d("DEBUG_EXTRATO", "ID Enviado para a API: " + projetoSelecionado.getCodConvenio());
 
-                buscarExtratoNaApi(projetoSelecionado.getCodProjeto(), dataInicio, dataFim);
+                String dataInicioApi = converterDataParaApi(dataInicio);
+                String dataFimApi = converterDataParaApi(dataFim);
+
+                buscarExtratoNaApi(projetoSelecionado.getCodConvenio(), dataInicioApi, dataFimApi);
             }
         });
+    }
+
+    private String converterDataParaApi(String dataBr) {
+        if (dataBr != null && dataBr.contains("/")) {
+            String[] partes = dataBr.split("/");
+            if (partes.length == 3) {
+                return partes[2] + "-" + partes[1] + "-" + partes[0];
+            }
+        }
+        return dataBr;
     }
 
     private void abrirCalendario(EditText campoData) {
         Calendar calendario = Calendar.getInstance();
         DatePickerDialog dialog = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
-            String dataFormatada = String.format("%02d/%02d/%04d", dayOfMonth, (month + 1), year);
+            String dataFormatada = String.format(java.util.Locale.US, "%02d/%02d/%04d", dayOfMonth, (month + 1), year);
             campoData.setText(dataFormatada);
             campoData.setTextColor(Color.BLACK);
         }, calendario.get(Calendar.YEAR), calendario.get(Calendar.MONTH), calendario.get(Calendar.DAY_OF_MONTH));
@@ -211,25 +241,32 @@ public class ExtratoActivity extends AppCompatActivity {
                                             JSONObject lanc = lancamentos.getJSONObject(j);
 
                                             String data = lanc.optString("dataPagamento", "--/--/----");
+                                            if (data.equals("null") || data.isEmpty()) data = "--/--/----";
+
                                             String historicoLimpo = lanc.optString("historico")
                                                     .replaceAll("<[^>]*>", "")
                                                     .replace(", ,", "")
                                                     .trim();
+                                            if (historicoLimpo.equals("null")) historicoLimpo = "";
+
                                             String tipo = lanc.optString("tipo", "Sem tipo");
+                                            if (tipo.equals("null")) tipo = "Sem tipo";
+
                                             String documento = lanc.optString("numeroDocumento", "S/N");
+                                            if (documento.equals("null")) documento = "S/N";
 
                                             // Trata valores nulos ou vazios no débito/crédito
                                             String valorDebito = lanc.optString("debito", "0.00");
-                                            if (valorDebito.isEmpty()) valorDebito = "0.00";
+                                            if (valorDebito.isEmpty() || valorDebito.equals("null")) valorDebito = "0.00";
 
                                             String valorCredito = lanc.optString("credito", "0.00");
-                                            if (valorCredito.isEmpty()) valorCredito = "0.00";
+                                            if (valorCredito.isEmpty() || valorCredito.equals("null")) valorCredito = "0.00";
 
-                                            // Formata string de exibição
-                                            String texto = "Data: " + data + "\n" +
-                                                    "Doc: " + documento + " | Tipo: " + tipo + "\n" +
-                                                    "Histórico: " + historicoLimpo + "\n" +
-                                                    "Débito: R$ " + valorDebito + " | Crédito: R$ " + valorCredito;
+                                            // Formata string de exibição com indentação visual (espaços)
+                                            String texto = "    Data: " + data + "\n" +
+                                                    "    Doc: " + documento + " | Tipo: " + tipo + "\n" +
+                                                    "    Histórico: " + historicoLimpo + "\n" +
+                                                    "    Débito: R$ " + valorDebito + " | Crédito: R$ " + valorCredito;
 
                                             listaItensExtrato.add(texto);
                                         }
@@ -251,6 +288,7 @@ public class ExtratoActivity extends AppCompatActivity {
 
                         } catch (Exception e) {
                             Log.e("FLUXO_API", "Erro JSON: " + e.getMessage());
+                            Toast.makeText(ExtratoActivity.this, "Erro ao processar dados do extrato.", Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         Toast.makeText(ExtratoActivity.this, "Erro " + codigoResposta, Toast.LENGTH_SHORT).show();
@@ -270,6 +308,21 @@ public class ExtratoActivity extends AppCompatActivity {
                 int id = item.getItemId();
                 if (id == R.id.opc_projetos) {
                     Intent intent = new Intent(this, ProjetosActivity.class);
+                    intent.putExtra("TOKEN", token);
+                    startActivity(intent);
+                } else if (id == R.id.opc_extrato) {
+                    drawer.closeDrawer(GravityCompat.START);
+                    return true;
+                } else if (id == R.id.opc_saldo) {
+                    Intent intent = new Intent(this, SaldoActivity.class);
+                    intent.putExtra("TOKEN", token);
+                    startActivity(intent);
+                } else if (id == R.id.opc_consultas) {
+                    Intent intent = new Intent(this, ConsultaActivity.class);
+                    intent.putExtra("TOKEN", token);
+                    startActivity(intent);
+                } else if (id == R.id.opc_pedidos) {
+                    Intent intent = new Intent(this, PedidosActivity.class);
                     intent.putExtra("TOKEN", token);
                     startActivity(intent);
                 } else if (id == R.id.opc_sair) {

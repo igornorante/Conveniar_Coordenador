@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Conveniar_Coordenador">
         <activity
+            android:name=".ConsultaActivity"
+            android:exported="false" />
+        <activity
             android:name=".SaldoActivity"
             android:exported="false" />
         <activity

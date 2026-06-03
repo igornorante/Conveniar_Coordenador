@@ -93,26 +93,29 @@ public class SaldoActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
 
-            if (id == R.id.opc_sair) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
-                finish();
-                return true;
-            }
-
-            if (id == R.id.opc_pedidos) {
-                Intent intent = new Intent(this, PedidosActivity.class);
-                intent.putExtra("TOKEN", token);
-                startActivity(intent);
-                drawer.closeDrawer(GravityCompat.START);
-                return true;
-            }
-
             if (id == R.id.opc_projetos) {
                 Intent intent = new Intent(this, ProjetosActivity.class);
                 intent.putExtra("TOKEN", token);
                 startActivity(intent);
+            } else if (id == R.id.opc_extrato) {
+                Intent intent = new Intent(this, ExtratoActivity.class);
+                intent.putExtra("TOKEN", token);
+                startActivity(intent);
+            } else if (id == R.id.opc_saldo) {
                 drawer.closeDrawer(GravityCompat.START);
+                return true;
+            } else if (id == R.id.opc_consultas) {
+                Intent intent = new Intent(this, ConsultaActivity.class);
+                intent.putExtra("TOKEN", token);
+                startActivity(intent);
+            } else if (id == R.id.opc_pedidos) {
+                Intent intent = new Intent(this, PedidosActivity.class);
+                intent.putExtra("TOKEN", token);
+                startActivity(intent);
+            } else if (id == R.id.opc_sair) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finishAffinity();
                 return true;
             }
 
