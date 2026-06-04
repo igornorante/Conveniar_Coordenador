@@ -64,6 +64,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/numero_pedido"
+                        android:textColor="@color/black"
                         android:textSize="14sp" />
                     <EditText
                         android:id="@+id/edt_num_pedido"
@@ -72,6 +73,8 @@
                         android:inputType="number"
                         android:autofillHints="none"
                         android:hint="@string/numero_pedido"
+                        android:textColor="@color/black"
+                        android:textColorHint="#999999"
                         android:layout_marginBottom="8dp"/>
 
                     <!-- Projeto -->
@@ -80,6 +83,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/projeto"
+                        android:textColor="@color/black"
                         android:textSize="14sp" />
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -96,6 +100,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/listar_todos"
+                            android:textColor="@color/black"
                             android:textSize="12sp"/>
                     </LinearLayout>
 
@@ -105,6 +110,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/data_pedido"
+                        android:textColor="@color/black"
                         android:textSize="14sp"
                         android:layout_marginTop="8dp"/>
                     <LinearLayout
@@ -119,11 +125,14 @@
                             android:hint="@string/hint_data"
                             android:inputType="date"
                             android:autofillHints="none"
+                            android:textColor="@color/black"
+                            android:textColorHint="#999999"
                             android:labelFor="@id/lbl_data_pedido" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/data_ate"
+                            android:textColor="@color/black"
                             android:layout_gravity="center_vertical"/>
                         <EditText
                             android:id="@+id/edt_data_fim"
@@ -133,6 +142,8 @@
                             android:hint="@string/hint_data"
                             android:inputType="date"
                             android:autofillHints="none"
+                            android:textColor="@color/black"
+                            android:textColorHint="#999999"
                             android:labelFor="@id/lbl_data_pedido" />
                     </LinearLayout>
 
@@ -142,6 +153,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/produto"
+                        android:textColor="@color/black"
                         android:textSize="14sp"
                         android:layout_marginTop="8dp"/>
                     <EditText
@@ -151,6 +163,8 @@
                         android:inputType="text"
                         android:autofillHints="none"
                         android:hint="@string/produto"
+                        android:textColor="@color/black"
+                        android:textColorHint="#999999"
                         android:layout_marginBottom="8dp"/>
 
                     <!-- Número Processo Compra -->
@@ -159,6 +173,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/num_processo_compra"
+                        android:textColor="@color/black"
                         android:textSize="14sp" />
                     <EditText
                         android:id="@+id/edt_num_processo"
@@ -167,6 +182,8 @@
                         android:inputType="number"
                         android:autofillHints="none"
                         android:hint="@string/num_processo_compra"
+                        android:textColor="@color/black"
+                        android:textColorHint="#999999"
                         android:layout_marginBottom="8dp"/>
 
                     <!-- Número AF/OS -->
@@ -175,6 +192,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/num_af_os"
+                        android:textColor="@color/black"
                         android:textSize="14sp" />
                     <EditText
                         android:id="@+id/edt_num_af_os"
@@ -183,6 +201,8 @@
                         android:inputType="number"
                         android:autofillHints="none"
                         android:hint="@string/num_af_os"
+                        android:textColor="@color/black"
+                        android:textColorHint="#999999"
                         android:layout_marginBottom="8dp"/>
 
                     <!-- Fornecedor -->
@@ -191,6 +211,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/fornecedor"
+                        android:textColor="@color/black"
                         android:textSize="14sp" />
                     <EditText
                         android:id="@+id/edt_fornecedor"
@@ -199,12 +220,15 @@
                         android:inputType="text"
                         android:autofillHints="none"
                         android:hint="@string/fornecedor"
+                        android:textColor="@color/black"
+                        android:textColorHint="#999999"
                         android:layout_marginBottom="4dp"/>
                     <CheckBox
                         android:id="@+id/chk_meus_pedidos"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/meus_pedidos"
+                        android:textColor="@color/black"
                         android:textSize="12sp"
                         android:layout_marginBottom="8dp"/>
 
@@ -214,6 +238,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/solicitante"
+                        android:textColor="@color/black"
                         android:textSize="14sp" />
                     <EditText
                         android:id="@+id/edt_solicitante"
@@ -222,6 +247,8 @@
                         android:inputType="text"
                         android:autofillHints="none"
                         android:hint="@string/solicitante"
+                        android:textColor="@color/black"
+                        android:textColorHint="#999999"
                         android:layout_marginBottom="8dp"/>
 
                     <!-- Situação -->
@@ -230,6 +257,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/situacao"
+                        android:textColor="@color/black"
                         android:textSize="14sp" />
                     <Spinner
                         android:id="@+id/spinner_situacao"
@@ -246,13 +274,13 @@
                         android:layout_gravity="center_horizontal"/>
                 </LinearLayout>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler_view_consultas"
+                <ListView
+                    android:id="@+id/list_consultas"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginTop="16dp"
-                    android:clipToPadding="false"
-                    android:paddingBottom="16dp" />
+                    android:divider="#33000000"
+                    android:dividerHeight="1dp" />
 
             </LinearLayout>
         </ScrollView>
