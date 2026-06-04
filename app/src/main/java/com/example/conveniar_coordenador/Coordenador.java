@@ -114,6 +114,49 @@ public class Coordenador {
         ApiClient.getInstance().newCall(request).enqueue(callback);
     }
 
+    public static void getPedidosCompraServico(
+            String token,
+            String numPedido,
+            String codProjeto,
+            String dataInicial,
+            String dataFinal,
+            String nomeProduto,
+            String numProcessoCompra,
+            String numAfOs,
+            String fornecedor,
+            boolean meusPedidos,
+            String solicitante,
+            String situacao,
+            Callback callback
+    ) {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "itens-compra").newBuilder();
 
+        if (numPedido != null && !numPedido.isEmpty()) urlBuilder.addQueryParameter("numPedido", numPedido);
+        if (codProjeto != null && !codProjeto.isEmpty()) urlBuilder.addQueryParameter("codProjeto", codProjeto);
+        if (dataInicial != null && !dataInicial.isEmpty()) urlBuilder.addQueryParameter("dataInicial", dataInicial);
+        if (dataFinal != null && !dataFinal.isEmpty()) urlBuilder.addQueryParameter("dataFinal", dataFinal);
+        if (nomeProduto != null && !nomeProduto.isEmpty()) urlBuilder.addQueryParameter("nomeProduto", nomeProduto);
+        if (numProcessoCompra != null && !numProcessoCompra.isEmpty()) urlBuilder.addQueryParameter("numProcessoCompra", numProcessoCompra);
+        // Nota: numAfOs, fornecedor, solicitante não aparecem como filtros no Swagger de itens-compra, mas manteremos a estrutura se a API suportar
+        urlBuilder.addQueryParameter("flagMeusPedidos", meusPedidos ? "S" : "N");
+        if (situacao != null && !situacao.isEmpty()) urlBuilder.addQueryParameter("situacao", situacao);
+
+        urlBuilder.addQueryParameter("pagina", "1");
+        urlBuilder.addQueryParameter("limite", "50");
+
+        String url = urlBuilder.build().toString();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("accept", "application/json")
+                .addHeader("Authorization", "Bearer " + token)
+                .addHeader("X-API-KEY", API_KEY)
+                .get()
+                .build();
+
+        Log.d("FLUXO_API", "URL BUSCA PEDIDOS: " + request.url().toString());
+
+        ApiClient.getInstance().newCall(request).enqueue(callback);
+    }
 
 }
