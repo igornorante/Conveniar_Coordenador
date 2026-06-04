@@ -95,6 +95,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                     intent = new Intent(this, LoginActivity.class);
                     // Limpa dados de login se necessário, mas mantém a foto por enquanto
                     finishAffinity();
+                } else if (id == R.id.opc_consultas) {
+                    intent = new Intent(this, ConsultaActivity.class);
                 }
 
                 if (intent != null) {
