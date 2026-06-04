@@ -1,34 +1,26 @@
 package com.example.conveniar_coordenador;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
-import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.conveniar_coordenador.DAO.ProjetoDAO;
 import com.example.conveniar_coordenador.model.Projeto;
-import com.google.android.material.navigation.NavigationView;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class SaldoActivity extends AppCompatActivity {
-
-    private String token;
+public class SaldoActivity extends BaseActivity {
 
     private Spinner spinnerProjetos;
     private Button btnConsultar;
@@ -53,7 +45,7 @@ public class SaldoActivity extends AppCompatActivity {
             return insets;
         });
 
-        token = getIntent().getStringExtra("TOKEN");
+        setupDrawer();
 
         spinnerProjetos = findViewById(R.id.spinner_projetos);
         btnConsultar = findViewById(R.id.btn_consultar);
@@ -71,54 +63,12 @@ public class SaldoActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        configurarMenuLateral();
-
         if (token == null || token.isEmpty()) {
             Log.e("FLUXO_API", "Token não encontrado");
             return;
         }
 
         carregarProjetos();
-    }
-
-    private void configurarMenuLateral() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        ImageView btnMenu = findViewById(R.id.menu_header);
-        NavigationView navigationView = findViewById(R.id.navigation_view);
-
-        btnMenu.setOnClickListener(v ->
-                drawer.openDrawer(GravityCompat.START)
-        );
-
-        navigationView.setNavigationItemSelectedListener(item -> {
-            int id = item.getItemId();
-
-            if (id == R.id.opc_sair) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
-                finish();
-                return true;
-            }
-
-            if (id == R.id.opc_pedidos) {
-                Intent intent = new Intent(this, PedidosActivity.class);
-                intent.putExtra("TOKEN", token);
-                startActivity(intent);
-                drawer.closeDrawer(GravityCompat.START);
-                return true;
-            }
-
-            if (id == R.id.opc_projetos) {
-                Intent intent = new Intent(this, ProjetosActivity.class);
-                intent.putExtra("TOKEN", token);
-                startActivity(intent);
-                drawer.closeDrawer(GravityCompat.START);
-                return true;
-            }
-
-            drawer.closeDrawer(GravityCompat.START);
-            return true;
-        });
     }
 
     private void carregarProjetos() {

@@ -1,33 +1,23 @@
 package com.example.conveniar_coordenador;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
-import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-
-import com.example.conveniar_coordenador.model.Projeto;
-import com.google.android.material.navigation.NavigationView;
 
 import com.example.conveniar_coordenador.DAO.ProjetoDAO;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.example.conveniar_coordenador.model.Projeto;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProjetosActivity extends AppCompatActivity {
+public class ProjetosActivity extends BaseActivity {
 
-    private String token;
     private ListView listProjetos;
     private ArrayAdapter<Projeto> adapter;
     private final List<Projeto> listaProjetos = new ArrayList<>();
@@ -44,7 +34,7 @@ public class ProjetosActivity extends AppCompatActivity {
             return insets;
         });
 
-        token = getIntent().getStringExtra("TOKEN");
+        setupDrawer();
 
         listProjetos = findViewById(R.id.list_projetos);
 
@@ -60,59 +50,6 @@ public class ProjetosActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        ImageView btnMenu = findViewById(R.id.menu_header);
-
-        //Tratamento de clique das opções do menu lateral
-        NavigationView navigationView = findViewById(R.id.navigation_view);
-        navigationView.setNavigationItemSelectedListener(item -> {
-            int id = item.getItemId();
-
-            //Opção Sair
-            if (id == R.id.opc_sair) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
-
-                drawer.closeDrawer(GravityCompat.START);
-                finish();
-                return true;
-            }
-            else if (id == R.id.opc_extrato) {
-                Intent intent = new Intent(this, ExtratoActivity.class);
-                intent.putExtra("TOKEN", token);
-                startActivity(intent);
-                drawer.closeDrawer(GravityCompat.START);
-                return true;
-            }
-            else if (id == R.id.opc_projetos) {
-                drawer.closeDrawer(GravityCompat.START);
-                return true;
-            }
-
-            else if (id == R.id.opc_pedidos) {
-                Intent intent = new Intent(this, PedidosActivity.class);
-                intent.putExtra("TOKEN", token);
-                startActivity(intent);
-
-                drawer.closeDrawer(GravityCompat.START);
-                return true;
-            }
-
-            else if(id == R.id.opc_saldo){
-                Intent intent = new Intent(this, SaldoActivity.class);
-                intent.putExtra("TOKEN", token);
-                startActivity(intent);
-
-                drawer.closeDrawer(GravityCompat.START);
-                return true;
-            }
-            return true;
-        });
-
-        btnMenu.setOnClickListener(v -> {
-            drawer.openDrawer(GravityCompat.START);
-        });
 
         if (token == null || token.isEmpty()) {
             Log.e("FLUXO_API", "Token não encontrado");
@@ -137,16 +74,6 @@ public class ProjetosActivity extends AppCompatActivity {
 
                     try {
                         List<Projeto> projetosRecebidos = ProjetoDAO.fromJson(json);
-
-                        Log.d("FLUXO_API", "Quantidade de projetos recebidos: " + projetosRecebidos.size());
-
-                        for (Projeto projeto : projetosRecebidos) {
-                            Log.d("FLUXO_API",
-                                    "Projeto -> codProjeto: " + projeto.getCodConvenio()
-                                            + " | nome: " + projeto.getNomeConvenio()
-                                            + " | status: " + projeto.getNomeStatus()
-                                            + " | saldo: " + projeto.getSaldo());
-                        }
 
                         runOnUiThread(() -> {
                             listaProjetos.clear();

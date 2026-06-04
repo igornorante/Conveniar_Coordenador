@@ -18,6 +18,7 @@ public class Coordenador {
 
 
 
+
     // 1. Rota: /usuario
     public static void getUsuario(String token, Callback callback) {
         Request request = new Request.Builder()

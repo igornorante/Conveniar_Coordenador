@@ -7,16 +7,37 @@
     android:orientation="vertical"
     android:gravity="center">
 
-    <!-- Foto -->
-    <com.google.android.material.imageview.ShapeableImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@drawable/capivara"
-        android:scaleType="centerCrop"
-        app:shapeAppearanceOverlay="@style/CircleImage"/>
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <!-- Foto -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/img_perfil_lateral"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/capivara"
+            android:scaleType="centerCrop"
+            app:shapeAppearanceOverlay="@style/CircleImage"/>
+
+        <!-- Botão de Edição -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/btn_editar_foto"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="bottom|end"
+            android:background="#FFFFFF"
+            android:padding="4dp"
+            android:src="@android:drawable/ic_menu_edit"
+            app:shapeAppearanceOverlay="@style/CircleImage"
+            android:elevation="4dp"
+            android:clickable="true"
+            android:focusable="true"/>
+    </FrameLayout>
 
     <!-- Nome -->
     <TextView
+        android:id="@+id/nome_usuario"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
