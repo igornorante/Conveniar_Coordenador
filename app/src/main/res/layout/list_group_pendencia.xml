@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    android:gravity="center_vertical"
+    android:background="@android:color/white">
+
+    <TextView
+        android:id="@+id/txt_count_grupo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="15"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginEnd="12dp"/>
+
+    <TextView
+        android:id="@+id/txt_titulo_grupo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Acerto de adiantamento"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"/>
+
+    <ImageView
+        android:id="@+id/img_seta_grupo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/arrow_down_float"
+        app:tint="#999999"
+        xmlns:app="http://schemas.android.com/apk/res-auto"/>
+
+</LinearLayout>
