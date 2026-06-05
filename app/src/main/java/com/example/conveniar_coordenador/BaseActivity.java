@@ -2,7 +2,6 @@ package com.example.conveniar_coordenador;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -91,13 +90,16 @@ public abstract class BaseActivity extends AppCompatActivity {
                     intent = new Intent(this, ExtratoActivity.class);
                 } else if (id == R.id.opc_saldo && !(this instanceof SaldoActivity)) {
                     intent = new Intent(this, SaldoActivity.class);
-                } else if (id == R.id.opc_sair) {
-                    intent = new Intent(this, LoginActivity.class);
-                    // Limpa dados de login se necessário, mas mantém a foto por enquanto
-                    finishAffinity();
-                } else if (id == R.id.opc_consultas) {
+                } else if (id == R.id.opc_pendencias && !(this instanceof PendenciasActivity)) {
+                    intent = new Intent(this, PendenciasActivity.class);
+                }else if (id == R.id.opc_consultas && !(this instanceof ConsultaActivity)) {
                     intent = new Intent(this, ConsultaActivity.class);
-                }
+                }else if (id == R.id.opc_inicio && !(this instanceof PrincipalActivity)) {
+                    intent = new Intent(this, PrincipalActivity.class);
+                } else if (id == R.id.opc_sair) {
+                        intent = new Intent(this, LoginActivity.class);
+                        finishAffinity();
+                    }
 
                 if (intent != null) {
                     intent.putExtra("TOKEN", token);

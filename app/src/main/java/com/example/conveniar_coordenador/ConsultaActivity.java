@@ -1,7 +1,6 @@
 package com.example.conveniar_coordenador;
 
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,22 +10,20 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.example.conveniar_coordenador.DAO.PedidoDAO;
 import com.example.conveniar_coordenador.DAO.ProjetoDAO;
 import com.example.conveniar_coordenador.model.Pedido;
 import com.example.conveniar_coordenador.model.Projeto;
-import com.google.android.material.navigation.NavigationView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,9 +35,8 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class ConsultaActivity extends AppCompatActivity {
+public class ConsultaActivity extends BaseActivity {
 
-    private String token;
     private final List<Projeto> listaProjetos = new ArrayList<>();
     private final List<Pedido> listaPedidos = new ArrayList<>();
     
@@ -56,10 +52,17 @@ public class ConsultaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_consulta);
 
-        token = getIntent().getStringExtra("TOKEN");
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+
+        // Configura automaticamente o menu lateral, nome e foto do usuário usando a lógica centralizada na BaseActivity
+        setupDrawer();
 
         inicializarComponentes();
-        configurarMenuLateral();
         configurarDatas();
         
         carregarProjetos();
@@ -248,50 +251,5 @@ public class ConsultaActivity extends AppCompatActivity {
             }
         }
         return dataBr;
-    }
-
-    private void configurarMenuLateral() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        ImageView btnMenu = findViewById(R.id.menu_header);
-
-        btnMenu.setOnClickListener(v -> drawer.openDrawer(GravityCompat.START));
-
-        NavigationView navigationView = findViewById(R.id.navigation_view);
-        navigationView.setNavigationItemSelectedListener(item -> {
-            int id = item.getItemId();
-
-            if (id == R.id.opc_projetos) {
-                Intent intent = new Intent(this, ProjetosActivity.class);
-                intent.putExtra("TOKEN", token);
-                startActivity(intent);
-                finish();
-            } else if (id == R.id.opc_extrato) {
-                Intent intent = new Intent(this, ExtratoActivity.class);
-                intent.putExtra("TOKEN", token);
-                startActivity(intent);
-                finish();
-            } else if (id == R.id.opc_saldo) {
-                Intent intent = new Intent(this, SaldoActivity.class);
-                intent.putExtra("TOKEN", token);
-                startActivity(intent);
-                finish();
-            } else if (id == R.id.opc_pedidos) {
-                Intent intent = new Intent(this, PedidosActivity.class);
-                intent.putExtra("TOKEN", token);
-                startActivity(intent);
-                finish();
-            } else if (id == R.id.opc_consultas) {
-                drawer.closeDrawer(GravityCompat.START);
-                return true;
-            } else if (id == R.id.opc_sair) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
-                finishAffinity();
-                return true;
-            }
-
-            drawer.closeDrawer(GravityCompat.START);
-            return true;
-        });
     }
 }

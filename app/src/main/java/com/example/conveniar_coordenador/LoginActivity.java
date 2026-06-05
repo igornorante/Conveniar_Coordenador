@@ -3,7 +3,6 @@ package com.example.conveniar_coordenador;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -17,6 +16,12 @@ import androidx.core.view.WindowInsetsCompat;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -40,76 +45,49 @@ public class LoginActivity extends AppCompatActivity {
         TextView txt_informacoes = findViewById(R.id.txt_informacoes);
         Button botao_entrar = findViewById(R.id.login_botao_entrar);
 
-        txt_politica.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, PoliticaActivity.class);
-            startActivity(intent);
-        });
-
-        txt_informacoes.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, InformacoesActivity.class);
-            startActivity(intent);
-        });
+        txt_politica.setOnClickListener(v -> startActivity(new Intent(this, PoliticaActivity.class)));
+        txt_informacoes.setOnClickListener(v -> startActivity(new Intent(this, InformacoesActivity.class)));
 
         botao_entrar.setOnClickListener(v -> {
-
             EditText usuario = findViewById(R.id.usuario);
             EditText senha = findViewById(R.id.senha);
 
-            String usuarioDigitado = usuario.getText().toString();
-            String senhaDigitada = senha.getText().toString();
+            String user = usuario.getText().toString();
+            String pass = senha.getText().toString();
 
-            if (usuarioDigitado.isEmpty() || senhaDigitada.isEmpty()) {
-                Toast.makeText(LoginActivity.this, "Preencha usuário e senha", Toast.LENGTH_SHORT).show();
+            if (user.isEmpty() || pass.isEmpty()) {
+                Toast.makeText(this, "Preencha usuário e senha", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            Toast.makeText(LoginActivity.this, "Gerando token...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Autenticando...", Toast.LENGTH_SHORT).show();
 
-            TokenGenerator.gerarToken(usuarioDigitado, senhaDigitada, new TokenGenerator.TokenCallback() {
-
+            TokenGenerator.gerarToken(user, pass, new TokenGenerator.TokenCallback() {
                 @Override
                 public void onTokenGerado(String token) {
-                    Log.d("FLUXO_API", "Token gerado com sucesso: " + token);
+                    Log.d("FLUXO_API", "Token gerado com sucesso. Buscando nome...");
 
-                    Coordenador.getEventosUsuario(token, 1, 50, new okhttp3.Callback() {
-
+                    // Tenta buscar o nome do coordenador, mas entra no app mesmo se essa chamada falhar
+                    Coordenador.getEventosUsuario(token, 1, 10, new okhttp3.Callback() {
                         @Override
-                        public void onFailure(okhttp3.Call call, java.io.IOException e) {
-                            Log.e("FLUXO_API", "Erro ao buscar eventos", e);
+                        public void onFailure(Call call, IOException e) {
+                            Log.e("FLUXO_API", "Falha ao buscar perfil, entrando com nome padrão", e);
+                            entrarNoApp(token, "Coordenador");
                         }
 
                         @Override
-                        public void onResponse(okhttp3.Call call, okhttp3.Response response) throws java.io.IOException {
+                        public void onResponse(Call call, Response response) throws IOException {
+                            String nomeExtraido = "Coordenador";
                             if (response.isSuccessful() && response.body() != null) {
-                                String jsonEventos = response.body().string();
-                                Log.d("FLUXO_API", "Eventos carregados: " + jsonEventos);
-
-                                String nomeExtraido = "Usuário";
                                 try {
-                                    JSONArray jsonArray = new JSONArray(jsonEventos);
-                                    if (jsonArray.length() > 0) {
-                                        // Extrai o nome do coordenador do primeiro evento retornado
-                                        nomeExtraido = jsonArray.getJSONObject(0).optString("nomeCoordenador", "Usuário");
+                                    String json = response.body().string();
+                                    JSONArray array = new JSONArray(json);
+                                    if (array.length() > 0) {
+                                        nomeExtraido = array.getJSONObject(0).optString("nomeCoordenador", "Coordenador");
                                     }
-                                } catch (Exception e) {
-                                    Log.e("FLUXO_API", "Erro ao processar nome do coordenador", e);
-                                }
-
-                                // Salva o nome no SharedPreferences para centralizar o acesso
-                                getSharedPreferences("USUARIO", MODE_PRIVATE)
-                                        .edit()
-                                        .putString("NOME", nomeExtraido)
-                                        .apply();
-
-                                runOnUiThread(() -> {
-                                    Intent intent = new Intent(LoginActivity.this, PedidosActivity.class);
-                                    intent.putExtra("TOKEN", token);
-                                    startActivity(intent);
-                                });
-
-                            } else {
-                                Log.e("FLUXO_API", "Falha ao carregar eventos. Código: " + response.code());
+                                } catch (Exception ignored) {}
                             }
+                            entrarNoApp(token, nomeExtraido);
                         }
                     });
                 }
@@ -117,9 +95,28 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onErro(String mensagem) {
                     Log.e("FLUXO_API", "Erro no processo: " + mensagem);
-                    runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Erro: " + mensagem, Toast.LENGTH_LONG).show());
+                    runOnUiThread(() -> {
+                        if (mensagem.contains("Unable to resolve host")) {
+                            Toast.makeText(LoginActivity.this, "Sem internet. Verifique sua conexão.", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(LoginActivity.this, mensagem, Toast.LENGTH_LONG).show();
+                        }
+                    });
                 }
             });
+        });
+    }
+
+    private void entrarNoApp(String token, String nome) {
+        // Salva o nome no SharedPreferences para o menu lateral
+        getSharedPreferences("USUARIO", MODE_PRIVATE).edit().putString("NOME", nome).apply();
+
+        runOnUiThread(() -> {
+            // Navega para a Dashboard (PrincipalActivity)
+            Intent intent = new Intent(LoginActivity.this, PrincipalActivity.class);
+            intent.putExtra("TOKEN", token);
+            startActivity(intent);
+            finish(); // Fecha a tela de login
         });
     }
 }

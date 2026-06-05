@@ -6,11 +6,7 @@ plugins {
 
 android {
     namespace = "com.example.conveniar_coordenador"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.conveniar_coordenador"
@@ -35,6 +31,7 @@ android {
     buildFeatures {
         // Habilita a geração da classe BuildConfig
         buildConfig = true
+        viewBinding = true
     }
 
 
@@ -51,9 +48,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    buildFeatures {
-        viewBinding = true
-    }
 }
 
 dependencies {
@@ -69,4 +63,5 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0") //Cliente HTTP principal para consumir a API
     implementation("com.squareup.retrofit2:converter-gson:2.9.0") // Para converter JSON em Objetos Java
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0") //Para imprimir requisições e respostas no Logcat
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0") // Para Gráficos
 }

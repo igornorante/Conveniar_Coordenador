@@ -19,6 +19,11 @@
                 android:icon="@drawable/icone_lupa"/>
 
             <item
+                android:id="@+id/opc_pendencias"
+                android:title="Pendências"
+                android:icon="@drawable/icone_pedido"/>
+
+            <item
                 android:id="@+id/opc_extrato"
                 android:title="Extrato"
                 android:icon="@drawable/icone_extrato"/>
@@ -27,11 +32,6 @@
                 android:id="@+id/opc_saldo"
                 android:title="Saldo"
                 android:icon="@drawable/icone_saldo"/>
-
-            <item
-                android:id="@+id/opc_saldo_executado"
-                android:title="Saldo Executado"
-                android:icon="@drawable/icone_saldo_executado"/>
 
             <item
                 android:id="@+id/opc_pedidos"

@@ -4,9 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
-    android:layout_height="64dp"
+    android:layout_height="80dp"
     android:background="@color/azul_conveniar"
-    android:elevation="4dp">
+    android:elevation="4dp"
+    android:paddingTop="10dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -15,22 +16,27 @@
         <!-- Ícone de menu (hamburguer) -->
         <ImageView
             android:id="@+id/menu_header"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:src="@drawable/menu_hamburguer"
             android:layout_centerVertical="true"
-            android:layout_marginStart="16dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="8dp"
             app:tint="@color/white"
-            android:clickable="true"/>
+            android:padding="4dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless"/>
 
         <!-- Logo -->
         <ImageView
             android:id="@+id/logo_header"
-            android:layout_width="wrap_content"
-            android:layout_height="70dp"
+            android:layout_width="180dp"
+            android:layout_height="match_parent"
             android:src="@drawable/logo_fundo_azul"
             android:layout_centerInParent="true"
-            android:layout_marginTop="20dp"/>
+            android:scaleType="fitCenter"
+            android:padding="8dp"/>
 
     </RelativeLayout>
 
