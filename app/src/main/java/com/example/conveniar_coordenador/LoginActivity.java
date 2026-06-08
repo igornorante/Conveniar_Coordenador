@@ -1,6 +1,11 @@
 package com.example.conveniar_coordenador;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -9,7 +14,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -23,7 +31,17 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+import androidx.work.Constraints;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import java.util.concurrent.TimeUnit;
+
 public class LoginActivity extends AppCompatActivity {
+
+
+    private static final int CODIGO_PERMISSAO_NOTIFICACAO = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +53,32 @@ public class LoginActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_DENIED) {
+                // Não tem permissão, vamos pedir ao usuário
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, CODIGO_PERMISSAO_NOTIFICACAO);
+            }
+        }
+
+        // 1. Criar restrições (ex: só rodar se tiver internet)
+        Constraints restricoes = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build();
+
+        // 2. Configurar a frequência (IMPORTANTE: O mínimo que o Android permite são 15 minutos)
+        PeriodicWorkRequest apiCheckRequest = new PeriodicWorkRequest.Builder(
+                ApiCheckWorker.class,
+                15, TimeUnit.MINUTES // Tenta rodar a cada 15 minutos
+        ).setConstraints(restricoes).build();
+
+        // 3. Enviar para o WorkManager
+        // Usamos "KEEP" para garantir que, se o agendamento já existir, ele não recrie um novo do zero.
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+                "VerificacaoDeApi",
+                ExistingPeriodicWorkPolicy.KEEP,
+                apiCheckRequest
+        );
     }
 
     @Override
@@ -66,6 +110,15 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onTokenGerado(String token) {
                     Log.d("FLUXO_API", "Token gerado com sucesso. Buscando nome...");
+
+                    //Coloca o token gerado no shared preferences, o qual será utilizado para as consultas em segundo plano, as quais serão responsáveis por gerar notificações
+                    SharedPreferences securePrefs = SecurePrefsManager.get(LoginActivity.this);
+                    if (securePrefs != null) {
+                        securePrefs.edit()
+                                .putString("usuario_login", user)
+                                .putString("senha_login", pass)
+                                .apply();
+                    }
 
                     // Tenta buscar o nome do coordenador, mas entra no app mesmo se essa chamada falhar
                     Coordenador.getEventosUsuario(token, 1, 10, new okhttp3.Callback() {
@@ -118,5 +171,11 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
             finish(); // Fecha a tela de login
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
     }
 }

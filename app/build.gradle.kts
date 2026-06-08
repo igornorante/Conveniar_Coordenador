@@ -64,4 +64,6 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0") // Para converter JSON em Objetos Java
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0") //Para imprimir requisições e respostas no Logcat
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0") // Para Gráficos
+    implementation("androidx.work:work-runtime:2.9.0") //para fazer requisições a API em segundo plano
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")//para guardar as informações de login de forma encriptada
 }
