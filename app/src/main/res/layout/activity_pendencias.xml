@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@color/white">
+        android:background="#F8FAFC">
 
         <include layout="@layout/header_geral" />
 
@@ -18,78 +18,90 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/azul_conveniar"
-            android:padding="12dp"
+            android:padding="8dp"
             android:text="Pendências"
             android:textAlignment="center"
             android:textColor="@android:color/white"
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <!-- Tabs simuladas conforme o print -->
-        <LinearLayout
+        <!-- Tabs Modernizadas -->
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2">
+            android:layout_margin="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp">
 
             <LinearLayout
-                android:id="@+id/tab_suas_pendencias"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="?attr/selectableItemBackground">
-                <TextView
-                    android:id="@+id/txt_tab_suas"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Suas pendências"
-                    android:padding="12dp"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:textSize="14sp" />
-                <View
-                    android:id="@+id/indicator_suas"
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:background="@color/black" />
-            </LinearLayout>
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:padding="4dp">
 
-            <LinearLayout
-                android:id="@+id/tab_pendencias_fundacao"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="?attr/selectableItemBackground">
-                <TextView
-                    android:id="@+id/txt_tab_fundacao"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/tab_suas_pendencias"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Pendências da fundação"
-                    android:padding="12dp"
-                    android:textColor="#999999"
-                    android:textSize="14sp" />
-                <View
-                    android:id="@+id/indicator_fundacao"
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:background="@color/divisor"
-                    android:visibility="visible" />
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="@drawable/borda_arredondada_status"
+                    android:padding="8dp">
+                    <TextView
+                        android:id="@+id/txt_tab_suas"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Suas pendências"
+                        android:textColor="@color/azul_conveniar"
+                        android:textStyle="bold"
+                        android:textSize="13sp" />
+                    <View
+                        android:id="@+id/indicator_suas"
+                        android:layout_width="40dp"
+                        android:layout_height="3dp"
+                        android:layout_marginTop="4dp"
+                        android:background="@color/azul_conveniar"
+                        android:visibility="visible" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tab_pendencias_fundacao"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="8dp">
+                    <TextView
+                        android:id="@+id/txt_tab_fundacao"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Da fundação"
+                        android:textColor="#999999"
+                        android:textSize="13sp" />
+                    <View
+                        android:id="@+id/indicator_fundacao"
+                        android:layout_width="40dp"
+                        android:layout_height="3dp"
+                        android:layout_marginTop="4dp"
+                        android:background="@color/azul_conveniar"
+                        android:visibility="invisible" />
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_pendencias"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="8dp"
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="16dp"
             android:clipToPadding="false" />
 
     </LinearLayout>
