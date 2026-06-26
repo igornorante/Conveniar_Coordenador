@@ -3,4 +3,16 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="azul_conveniar">#0565A5</color>
+
+    <!-- Cores para Status de Pendências -->
+    <color name="pendencia_laranja_bg">#FFF3E0</color>
+    <color name="pendencia_laranja_txt">#E67E22</color>
+    <color name="pendencia_azul_bg">#E3F2FD</color>
+    <color name="pendencia_azul_txt">#2196F3</color>
+    <color name="pendencia_vermelho_bg">#FFEBEE</color>
+    <color name="pendencia_vermelho_txt">#E53935</color>
+
+    <color name="cinza_claro">#F8FAFC</color>
+    <color name="cinza_texto">#666666</color>
+    <color name="divisor">#DDDDDD</color>
 </resources>
