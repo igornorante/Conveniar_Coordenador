@@ -122,6 +122,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                     intent = new Intent(this, SaldoActivity.class);
                 } else if (id == R.id.opc_consultas && !(this instanceof ConsultaActivity)) {
                     intent = new Intent(this, ConsultaActivity.class);
+                } else if (id == R.id.opc_pendencias && !(this instanceof PendenciasActivity)) {
+                    intent = new Intent(this, PendenciasActivity.class);
                 } else if (id == R.id.opc_inicio && !(this instanceof PrincipalActivity)) {
                     intent = new Intent(this, PrincipalActivity.class);
                 } else if (id == R.id.opc_sair) {
