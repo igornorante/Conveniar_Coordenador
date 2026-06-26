@@ -15,15 +15,16 @@
         <include layout="@layout/header_geral" />
 
         <TextView
+            android:id="@+id/txt_titulo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/azul_conveniar"
             android:padding="8dp"
-            android:text="Dashboard"
+            android:text="Painel Estratégico"
             android:textAlignment="center"
             android:textColor="@android:color/white"
             android:textSize="18sp"
-            />
+            android:textStyle="bold" />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -34,6 +35,16 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/txt_welcome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Olá, Coordenador"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:textColor="#333333"
+                    android:layout_marginBottom="16dp"/>
 
                 <!-- 1. BLOCO DE SALDO PRINCIPAL -->
                 <androidx.cardview.widget.CardView
@@ -53,7 +64,8 @@
                             android:text="SALDO TOTAL CONSOLIDADO"
                             android:textColor="#BBFFFFFF"
                             android:textSize="11sp"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold"
+                            android:letterSpacing="0.1"/>
                         <TextView
                             android:id="@+id/dash_total_saldo"
                             android:layout_width="wrap_content"
@@ -64,22 +76,25 @@
                             android:textStyle="bold"
                             android:layout_marginTop="8dp"/>
 
-                        <!-- Linha de Métricas Secundárias -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:layout_marginTop="16dp"
                             android:weightSum="3">
-
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:orientation="vertical">
-
                                 <TextView
-                                    android:id="@+id/dash_avg_saldo_label"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Média"
+                                    android:textColor="#AAFFFFFF"
+                                    android:textSize="10sp"/>
+                                <TextView
+                                    android:id="@+id/dash_avg_saldo"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="R$ 0,00"
@@ -87,16 +102,20 @@
                                     android:textSize="13sp"
                                     android:textStyle="bold"/>
                             </LinearLayout>
-
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:orientation="vertical"
                                 android:gravity="center">
-
                                 <TextView
-                                    android:id="@+id/dash_max_saldo_label"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Maior"
+                                    android:textColor="#AAFFFFFF"
+                                    android:textSize="10sp"/>
+                                <TextView
+                                    android:id="@+id/dash_max_saldo"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="R$ 0,00"
@@ -104,7 +123,6 @@
                                     android:textSize="13sp"
                                     android:textStyle="bold"/>
                             </LinearLayout>
-
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -118,7 +136,7 @@
                                     android:textColor="#AAFFFFFF"
                                     android:textSize="10sp"/>
                                 <TextView
-                                    android:id="@+id/dash_count_projetos"
+                                    android:id="@+id/dash_count_ativos"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="0"
@@ -145,7 +163,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
-
                     <androidx.cardview.widget.CardView
                         android:id="@+id/btn_pedidos"
                         android:layout_width="0dp"
@@ -164,7 +181,8 @@
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
                                 android:src="@drawable/icone_pedido"
-                                app:tint="@color/azul_conveniar"/>
+                                app:tint="@color/azul_conveniar"
+                                android:contentDescription="Pedidos" />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -192,7 +210,8 @@
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
                                 android:src="@drawable/icone_extrato"
-                                app:tint="@color/azul_conveniar"/>
+                                app:tint="@color/azul_conveniar"
+                                android:contentDescription="Extrato" />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -219,7 +238,8 @@
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
                                 android:src="@drawable/icone_projetos"
-                                app:tint="@color/azul_conveniar"/>
+                                app:tint="@color/azul_conveniar"
+                                android:contentDescription="Projetos" />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -234,7 +254,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Alertas de Gestão"
+                    android:text="Alertas e Fila"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="#333333"
@@ -246,7 +266,6 @@
                     android:layout_height="wrap_content"
                     android:columnCount="3"
                     android:alignmentMode="alignMargins">
-
                     <androidx.cardview.widget.CardView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -264,18 +283,17 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="--"
-                                android:textSize="20sp"
+                                android:textSize="18sp"
                                 android:textStyle="bold"
                                 android:textColor="#E67E22"/>
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Pendências"
+                                android:text="Pendentes"
                                 android:textSize="9sp"
                                 android:textColor="#666666"/>
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
-
                     <androidx.cardview.widget.CardView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -293,7 +311,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="0"
-                                android:textSize="20sp"
+                                android:textSize="18sp"
                                 android:textStyle="bold"
                                 android:textColor="#E74C3C"/>
                             <TextView
@@ -304,7 +322,6 @@
                                 android:textColor="#666666"/>
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
-
                     <androidx.cardview.widget.CardView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -318,11 +335,11 @@
                             android:padding="10dp"
                             android:gravity="center">
                             <TextView
-                                android:id="@+id/dash_count_baixo_saldo"
+                                android:id="@+id/dash_count_critico"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="0"
-                                android:textSize="20sp"
+                                android:textSize="18sp"
                                 android:textStyle="bold"
                                 android:textColor="#F39C12"/>
                             <TextView
@@ -360,7 +377,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Status da Carteira"
+                    android:text="Saúde da Carteira"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="#333333"
@@ -372,7 +389,7 @@
                     android:layout_height="250dp"
                     app:cardCornerRadius="12dp">
                     <com.github.mikephil.charting.charts.PieChart
-                        android:id="@+id/dash_chart_saldo"
+                        android:id="@+id/dash_chart_status"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:padding="8dp"/>
@@ -424,7 +441,7 @@
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="12dp">
                     <LinearLayout
-                        android:id="@+id/layout_recent_activity"
+                        android:id="@+id/layout_recent"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"

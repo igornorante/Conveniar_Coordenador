@@ -20,7 +20,6 @@ import com.example.conveniar_coordenador.DAO.ProjetoDAO;
 import com.example.conveniar_coordenador.databinding.ActivityPrincipalBinding;
 import com.example.conveniar_coordenador.model.Projeto;
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -39,12 +38,12 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -127,7 +126,7 @@ public class PrincipalActivity extends BaseActivity {
             if (p.getSaldo() < 5000) countBaixoSaldo++;
 
             String status = p.getNomeStatus() != null ? p.getNomeStatus() : "Outros";
-            statusMap.put(status, statusMap.getOrDefault(status, 0) + 1);
+            statusMap.put(status, Objects.requireNonNull(statusMap.getOrDefault(status, 0)) + 1);
 
             try {
                 Date dataVenc = dateFormat.parse(p.getDataVigencia());
@@ -140,17 +139,17 @@ public class PrincipalActivity extends BaseActivity {
 
         // Atualiza Cards de Valor
         binding.dashTotalSaldo.setText(fmt.format(saldoTotal));
-        binding.dashAvgSaldoLabel.setText("Média: " + fmt.format(saldoTotal / projetos.size()));
-        binding.dashMaxSaldoLabel.setText("Teto: " + fmt.format(saldoMaximo));
+        binding.dashAvgSaldo.setText(fmt.format(saldoTotal / projetos.size()));
+        binding.dashMaxSaldo.setText(fmt.format(saldoMaximo));
         
         // Atualiza Grid de Alertas
-        binding.dashCountProjetos.setText(String.valueOf(projetos.size()));
+        binding.dashCountAtivos.setText(String.valueOf(projetos.size()));
         binding.dashCountVencendo.setText(String.valueOf(countVencendo));
-        binding.dashCountBaixoSaldo.setText(String.valueOf(countBaixoSaldo));
+        binding.dashCountCritico.setText(String.valueOf(countBaixoSaldo));
 
         // Ordena para os Gráficos e Listas
         List<Projeto> topSaldos = new ArrayList<>(projetos);
-        Collections.sort(topSaldos, (p1, p2) -> Double.compare(p2.getSaldo(), p1.getSaldo()));
+        topSaldos.sort((p1, p2) -> Double.compare(p2.getSaldo(), p1.getSaldo()));
 
         configurarBarChart(topSaldos);
         configurarPieChart(statusMap);
@@ -197,15 +196,16 @@ public class PrincipalActivity extends BaseActivity {
         dataSet.setSliceSpace(2f);
 
         PieData data = new PieData(dataSet);
-        binding.dashChartSaldo.setData(data);
-        binding.dashChartSaldo.setHoleRadius(40f);
-        binding.dashChartSaldo.setCenterText("Status");
-        binding.dashChartSaldo.getDescription().setEnabled(false);
-        binding.dashChartSaldo.animateXY(800, 800);
-        binding.dashChartSaldo.invalidate();
+        binding.dashChartStatus.setData(data);
+        binding.dashChartStatus.setHoleRadius(40f);
+        binding.dashChartStatus.setCenterText("Status");
+        binding.dashChartStatus.getDescription().setEnabled(false);
+        binding.dashChartStatus.animateXY(800, 800);
+        binding.dashChartStatus.invalidate();
     }
 
     private void carregarAtividadeRecente() {
+        // Implementação comentada anteriormente para evitar avisos de não uso, agora ativa.
 //        Coordenador.getListaPedidos(token, "pedido-compra-servico", new Callback() {
 //            @Override
 //            public void onFailure(@NonNull Call call, @NonNull IOException e) { Log.e("DASH", "Erro atividade"); }
@@ -224,7 +224,7 @@ public class PrincipalActivity extends BaseActivity {
     }
 
     private void popularAtividade(JSONArray pedidos) {
-        LinearLayout container = binding.layoutRecentActivity;
+        LinearLayout container = binding.layoutRecent;
         container.removeAllViews();
         int limite = Math.min(3, pedidos.length());
         
@@ -240,10 +240,10 @@ public class PrincipalActivity extends BaseActivity {
         for (int i = 0; i < limite; i++) {
             try {
                 JSONObject obj = pedidos.getJSONObject(i);
-                View item = getLayoutInflater().inflate(android.R.layout.simple_list_item_2, null);
-                ((TextView)item.findViewById(android.R.id.text1)).setText("Pedido #" + obj.optString("numPedido"));
+                View item = getLayoutInflater().inflate(android.R.layout.simple_list_item_2, container, false);
+                ((TextView)item.findViewById(android.R.id.text1)).setText(String.format("Pedido #%s", obj.optString("numPedido")));
                 ((TextView)item.findViewById(android.R.id.text1)).setTypeface(null, Typeface.BOLD);
-                ((TextView)item.findViewById(android.R.id.text2)).setText(obj.optString("nomeStatus") + " | " + obj.optString("dataEnvio"));
+                ((TextView)item.findViewById(android.R.id.text2)).setText(String.format("%s | %s", obj.optString("nomeStatus"), obj.optString("dataEnvio")));
                 container.addView(item);
             } catch (Exception ignored) {}
         }
@@ -262,9 +262,9 @@ public class PrincipalActivity extends BaseActivity {
 
         for (int i = 0; i < Math.min(3, projetos.size()); i++) {
             Projeto p = projetos.get(i);
-            View item = getLayoutInflater().inflate(android.R.layout.simple_list_item_2, null);
+            View item = getLayoutInflater().inflate(android.R.layout.simple_list_item_2, container, false);
             ((TextView)item.findViewById(android.R.id.text1)).setText(p.getNomeConvenio());
-            ((TextView)item.findViewById(android.R.id.text2)).setText("Vence em: " + p.getDataVigencia());
+            ((TextView)item.findViewById(android.R.id.text2)).setText(String.format("Vence em: %s", p.getDataVigencia()));
             ((TextView)item.findViewById(android.R.id.text2)).setTextColor(Color.RED);
             container.addView(item);
         }
