@@ -2,33 +2,45 @@ package com.example.conveniar_coordenador;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.conveniar_coordenador.DAO.ProjetoDAO;
+import com.example.conveniar_coordenador.databinding.ActivityProjetosBinding;
 import com.example.conveniar_coordenador.model.Projeto;
 
+import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class ProjetosActivity extends BaseActivity {
 
-    private ListView listProjetos;
-    private ArrayAdapter<Projeto> adapter;
+    private ActivityProjetosBinding binding;
+    private ProjetosAdapter adapter;
     private final List<Projeto> listaProjetos = new ArrayList<>();
+    private final NumberFormat fmt = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_projetos);
+        binding = ActivityProjetosBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.mainContent, (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
@@ -36,59 +48,50 @@ public class ProjetosActivity extends BaseActivity {
 
         setupDrawer();
 
-        listProjetos = findViewById(R.id.list_projetos);
-
-        adapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_list_item_1,
-                listaProjetos
-        );
-
-        listProjetos.setAdapter(adapter);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (token == null || token.isEmpty()) {
-            Log.e("FLUXO_API", "Token não encontrado");
-            return;
-        }
+        // Configuração do RecyclerView
+        binding.recyclerProjetos.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new ProjetosAdapter(listaProjetos);
+        binding.recyclerProjetos.setAdapter(adapter);
 
         carregarProjetos();
     }
 
     private void carregarProjetos() {
-        Coordenador.getProjetos(token, null, "Ativo", 1, 50, new okhttp3.Callback() {
+        if (token == null) return;
+
+        Coordenador.getProjetos(token, null, null, 1, 100, new Callback() {
             @Override
-            public void onFailure(okhttp3.Call call, java.io.IOException e) {
-                Log.e("FLUXO_API", "Erro ao buscar projetos: " + e.getMessage());
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                runOnUiThread(() -> Toast.makeText(ProjetosActivity.this, "Erro de conexão", Toast.LENGTH_SHORT).show());
             }
 
             @Override
-            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws java.io.IOException {
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (response.isSuccessful() && response.body() != null) {
-                    String json = response.body().string();
-                    Log.d("FLUXO_API", "JSON bruto projetos: " + json);
-
                     try {
-                        List<Projeto> projetosRecebidos = ProjetoDAO.fromJson(json);
-
-                        runOnUiThread(() -> {
-                            listaProjetos.clear();
-                            listaProjetos.addAll(projetosRecebidos);
-                            adapter.notifyDataSetChanged();
-                        });
-
+                        String json = response.body().string();
+                        List<Projeto> projetos = ProjetoDAO.fromJson(json);
+                        runOnUiThread(() -> atualizarLista(projetos));
                     } catch (Exception e) {
-                        Log.e("FLUXO_API", "Erro ao processar JSON: " + e.getMessage(), e);
+                        Log.e("PROJETOS", "Erro ao processar JSON", e);
                     }
-
-                } else {
-                    Log.e("FLUXO_API", "Falha ao carregar projetos. Código: " + response.code());
                 }
             }
         });
+    }
+
+    private void atualizarLista(List<Projeto> projetos) {
+        listaProjetos.clear();
+        listaProjetos.addAll(projetos);
+        adapter.notifyDataSetChanged();
+
+        // Atualiza o bloco de resumo (Dashboard Style)
+        double saldoTotal = 0;
+        for (Projeto p : projetos) {
+            saldoTotal += p.getSaldo();
+        }
+
+        binding.txtTotalSaldoProjetos.setText(fmt.format(saldoTotal));
+        binding.txtTotalProjetosCount.setText(projetos.size() + " projetos encontrados");
     }
 }
