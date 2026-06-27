@@ -5,6 +5,8 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
+import androidx.lifecycle.LiveData;
+
 import java.util.List;
 
 @Dao
@@ -28,6 +30,9 @@ public interface AppDAO {
     @Query("UPDATE projetos SET precisaAtencao = 0")
     void limparAtencaoProjetos();
 
+    @Query("SELECT * FROM projetos")
+    LiveData<List<ProjetoEntity>> getTodosProjetosLive();
+
 
     // --- PEDIDOS ---
 
@@ -42,4 +47,12 @@ public interface AppDAO {
 
     @Query("UPDATE pedidos SET precisaAtencao = 0")
     void limparAtencaoPedidos();
+
+    // NOVO: Retorna uma lista "viva" de todos os pedidos
+    @Query("SELECT * FROM pedidos")
+    LiveData<List<PedidoEntity>> getTodosPedidosLive();
+
+    // Retorna uma lista observável de pedidos filtrada pelo tipo exato
+    @Query("SELECT * FROM pedidos WHERE nomeTipoPedido = :tipo")
+    LiveData<List<PedidoEntity>> getPedidosPorTipoLive(String tipo);
 }

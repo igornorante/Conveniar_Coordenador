@@ -13,12 +13,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.example.conveniar_coordenador.database.AppDatabase;
 import com.google.android.material.navigation.NavigationView;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import androidx.work.WorkManager;
+import android.content.SharedPreferences;
 
 /**
  * Activity base para centralizar a lógica do Menu Lateral
@@ -127,6 +131,23 @@ public abstract class BaseActivity extends AppCompatActivity {
                 } else if (id == R.id.opc_inicio && !(this instanceof PrincipalActivity)) {
                     intent = new Intent(this, PrincipalActivity.class);
                 } else if (id == R.id.opc_sair) {
+                    //Parando os agendamentos do worker
+                    WorkManager.getInstance(this).cancelUniqueWork("VerificacaoDeApi");
+
+                    //Apagando credenciais do usuário
+                    SharedPreferences securePrefs = SecurePrefsManager.get(this);
+                    if (securePrefs != null) {
+                        securePrefs.edit().clear().apply(); // O .clear() apaga usuário, senha, token e flags
+                    }
+
+                    getSharedPreferences("USUARIO", MODE_PRIVATE).edit().clear().apply();
+
+                    //fecha a conexão com o banco
+                    AppDatabase.encerrarConexao();
+
+                    //A ideia dessa flag é impedir o usuário de voltar para dentro do aplicativo ao clicar no botão de voltar
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
                     intent = new Intent(this, LoginActivity.class);
                     finishAffinity();
                 }

@@ -13,6 +13,8 @@ public class PedidoEntity {
 
     public String situacao;
 
+    public String nomeTipoPedido;
+
     public boolean precisaAtencao; // Para a sua View de Atenção
 
     public String jsonOriginal;

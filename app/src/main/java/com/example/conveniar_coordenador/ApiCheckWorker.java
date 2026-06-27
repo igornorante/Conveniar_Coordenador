@@ -162,6 +162,7 @@ public class ApiCheckWorker extends Worker {
                                                     String numPedido = obj.optString("numeroPedido"); // Chave corrigida!
                                                     String situacaoNova = obj.optString("situacao", obj.optString("status", "semStatus")); // Mantenha assim se não soubermos a exata ainda
                                                     String nomePedido = obj.optString("produto", "Pedido #" + numPedido); // Chave do nome corrigida!
+                                                    String tipoPedido = obj.optString("nomeTipoPedido", "Outros");
 
                                                     if (numPedido.isEmpty()) {
                                                         Log.w("WORKER_DEBUG", "ALERTA: Pedido ignorado porque 'numeroPedido' está vazio! Dados crus: " + obj.toString());
@@ -182,6 +183,7 @@ public class ApiCheckWorker extends Worker {
                                                     PedidoEntity novoPedido = new PedidoEntity();
                                                     novoPedido.numPedido = numPedido;
                                                     novoPedido.situacao = situacaoNova;
+                                                    novoPedido.nomeTipoPedido = tipoPedido;
                                                     novoPedido.precisaAtencao = (pedidoSalvo != null && pedidoSalvo.precisaAtencao) || precisaAcao;
                                                     novoPedido.jsonOriginal = obj.toString();
 
