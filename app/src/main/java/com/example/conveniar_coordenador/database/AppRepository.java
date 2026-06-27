@@ -12,6 +12,8 @@ public class AppRepository {
     private LiveData<List<ProjetoEntity>> todosProjetos;
     private LiveData<List<PedidoEntity>> todosPedidos;
 
+    private LiveData<List<PedidoPagamentoEntity>> todosPedidosPagamento;
+
     // Usamos um ExecutorService para rodar tarefas pesadas de banco de dados fora da Thread da UI
     private ExecutorService executorService;
 
@@ -22,6 +24,7 @@ public class AppRepository {
         // O Room já sabe que LiveData roda em background, então é seguro chamar direto
         todosProjetos = dao.getTodosProjetosLive();
         todosPedidos = dao.getTodosPedidosLive();
+        todosPedidosPagamento = dao.getTodosPedidosPagamentoLive();
 
         executorService = Executors.newSingleThreadExecutor();
     }
@@ -35,58 +38,54 @@ public class AppRepository {
         return todosPedidos;
     }
 
-    public LiveData<List<PedidoEntity>> getPagamentoBolsa() {
-        return dao.getPedidosPorTipoLive("Pagamento Bolsa");
+    public LiveData<List<PedidoPagamentoEntity>> getTodosPedidosPagamento(){
+        return todosPedidosPagamento;
     }
 
-    // 2. Pagamento Pessoa Física
-    public LiveData<List<PedidoEntity>> getPagamentoPessoaFisica() {
-        return dao.getPedidosPorTipoLive("Pagamento Pessoa Física");
+    //
+
+    public LiveData<List<PedidoPagamentoEntity>> getPagamentoBolsa() {
+        return dao.getPedidosPagamentoPorTipoLive("Pagamento Bolsa");
     }
 
-    // 3. Pagamento Pessoa Jurídica
-    public LiveData<List<PedidoEntity>> getPagamentoPessoaJuridica() {
-        return dao.getPedidosPorTipoLive("Pagamento Pessoa Jurídica");
+    public LiveData<List<PedidoPagamentoEntity>> getPagamentoPessoaFisica() {
+        return dao.getPedidosPagamentoPorTipoLive("Pagamento Pessoa Física");
     }
 
-    // 4. Pedido de Adiantamento
-    public LiveData<List<PedidoEntity>> getPedidoAdiantamento() {
-        return dao.getPedidosPorTipoLive("Pedido de Adiantamento");
+    public LiveData<List<PedidoPagamentoEntity>> getPagamentoPessoaJuridica() {
+        return dao.getPedidosPagamentoPorTipoLive("Pagamento Pessoa Jurídica");
     }
 
-    // 5. Pedido de Reembolso
-    public LiveData<List<PedidoEntity>> getPedidoReembolso() {
-        return dao.getPedidosPorTipoLive("Pedido de Reembolso");
+    public LiveData<List<PedidoPagamentoEntity>> getPedidoAdiantamento() {
+        return dao.getPedidosPagamentoPorTipoLive("Pedido de Adiantamento");
     }
 
-    // 6. Pagamento Bolsa em Lote
-    public LiveData<List<PedidoEntity>> getPagamentoBolsaEmLote() {
-        return dao.getPedidosPorTipoLive("Pagamento Bolsa em Lote");
+    public LiveData<List<PedidoPagamentoEntity>> getPedidoReembolso() {
+        return dao.getPedidosPagamentoPorTipoLive("Pedido de Reembolso");
     }
 
-    // 7. Entrada de Receita
-    public LiveData<List<PedidoEntity>> getEntradaReceita() {
-        return dao.getPedidosPorTipoLive("Entrada de Receita");
+    public LiveData<List<PedidoPagamentoEntity>> getPagamentoBolsaEmLote() {
+        return dao.getPedidosPagamentoPorTipoLive("Pagamento Bolsa em Lote");
     }
 
-    // 8. Pagamento Diária
-    public LiveData<List<PedidoEntity>> getPagamentoDiaria() {
-        return dao.getPedidosPorTipoLive("Pagamento Diária");
+    public LiveData<List<PedidoPagamentoEntity>> getEntradaReceita() {
+        return dao.getPedidosPagamentoPorTipoLive("Entrada de Receita");
     }
 
-    // 9. Pedido de Acerto de Adiantamento
-    public LiveData<List<PedidoEntity>> getAcertoAdiantamento() {
-        return dao.getPedidosPorTipoLive("Pedido de Acerto de Adiantamento");
+    public LiveData<List<PedidoPagamentoEntity>> getPagamentoDiaria() {
+        return dao.getPedidosPagamentoPorTipoLive("Pagamento Diária");
     }
 
-    // 10. Pedido de Reconhecimento Receita
-    public LiveData<List<PedidoEntity>> getReconhecimentoReceita() {
-        return dao.getPedidosPorTipoLive("Pedido de Reconhecimento Receita");
+    public LiveData<List<PedidoPagamentoEntity>> getAcertoAdiantamento() {
+        return dao.getPedidosPagamentoPorTipoLive("Pedido de Acerto de Adiantamento");
     }
 
-    // 11. Pedido de Transferência entre Projetos
-    public LiveData<List<PedidoEntity>> getTransferenciaProjetos() {
-        return dao.getPedidosPorTipoLive("Pedido de Transferência entre Projetos");
+    public LiveData<List<PedidoPagamentoEntity>> getReconhecimentoReceita() {
+        return dao.getPedidosPagamentoPorTipoLive("Pedido de Reconhecimento Receita");
+    }
+
+    public LiveData<List<PedidoPagamentoEntity>> getTransferenciaProjetos() {
+        return dao.getPedidosPagamentoPorTipoLive("Pedido de Transferência entre Projetos");
     }
 
     // --- Futuramente, a lógica de sincronização da API (Coordenador) virá para cá ---

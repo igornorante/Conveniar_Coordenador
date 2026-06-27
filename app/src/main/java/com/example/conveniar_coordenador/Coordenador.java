@@ -142,7 +142,7 @@ public class Coordenador {
         if (situacao != null && !situacao.isEmpty()) urlBuilder.addQueryParameter("situacao", situacao);
 
         urlBuilder.addQueryParameter("pagina", "1");
-        urlBuilder.addQueryParameter("limite", "50");
+        urlBuilder.addQueryParameter("limite", "200");
 
         String url = urlBuilder.build().toString();
 
@@ -155,6 +155,59 @@ public class Coordenador {
                 .build();
 
         Log.d("FLUXO_API", "URL BUSCA PEDIDOS: " + request.url().toString());
+
+        ApiClient.getInstance().newCall(request).enqueue(callback);
+    }
+
+    public static void getPedidosPagamento(
+            String token,
+            String nomeTipoPedido, // nomeTipoPedido
+            String codProjeto, //projeto
+            String numPedido, //numeroPedido
+            String nomeFavo, //nomeFavorecido
+            String dataInicial, //dataPedido
+            String valorPedido, //valorPedido
+            String status, //nomeStatus
+            String dataFinal, //isso não faz parte do JSON que recebemos, a explicação está na parte dos filtros logo abaixo
+            // String codPedido, //codPedido não faz parte dos filtros no momento
+            // String dataVen, //dataVencimento não faz parte dos filtros da API no momento
+            // String dataEnvio, //dataEnvio não faz parte dos filtros da API no momento
+            // String nomeCoord, //nomeCoordenador não faz parte dos filtros da API
+            boolean meusPedidos,
+            Callback callback
+    ) {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "pedidos-pagamento").newBuilder();
+
+        //FILTROS DE PESQUISA DA API
+        if (numPedido != null && !numPedido.isEmpty()) urlBuilder.addQueryParameter("numPedido", numPedido);
+        if (codProjeto != null && !codProjeto.isEmpty()) urlBuilder.addQueryParameter("codProjeto", codProjeto);
+
+        //detalhe o filtro de data inicial muito provavelmente funciona como pagamento efetuado depois da data
+        //inserida, mas o de data final não sei se é em relação ao vencimento do pagamento ou se só filtra
+        //pedidos que foram pagos antes da data, enfim se isso for importante em algum momento é bom conferir
+        if (dataInicial != null && !dataInicial.isEmpty()) urlBuilder.addQueryParameter("dataInicial", dataInicial);
+        if (dataFinal != null && !dataFinal.isEmpty()) urlBuilder.addQueryParameter("dataFinal", dataFinal);
+
+        if (nomeTipoPedido != null && !nomeTipoPedido.isEmpty()) urlBuilder.addQueryParameter("nomeTipoPedido", nomeTipoPedido);
+        if (status != null && !status.isEmpty()) urlBuilder.addQueryParameter("situacao", status);
+        if (nomeFavo != null && !nomeFavo.isEmpty()) urlBuilder.addQueryParameter("favorecido", nomeFavo);
+
+        urlBuilder.addQueryParameter("flagMeusPedidos", meusPedidos ? "S" : "N");
+
+        urlBuilder.addQueryParameter("pagina", "1");
+        urlBuilder.addQueryParameter("limite", "250");
+
+        String url = urlBuilder.build().toString();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("accept", "application/json")
+                .addHeader("Authorization", "Bearer " + token)
+                .addHeader("X-API-KEY", API_KEY)
+                .get()
+                .build();
+
+        Log.d("FLUXO_API", "URL BUSCA PEDIDOS PAGAMENTO: " + request.url().toString());
 
         ApiClient.getInstance().newCall(request).enqueue(callback);
     }

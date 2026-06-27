@@ -13,7 +13,7 @@ public class PedidoEntity {
 
     public String situacao;
 
-    public String nomeTipoPedido;
+    public String codProjeto;
 
     public boolean precisaAtencao; // Para a sua View de Atenção
 

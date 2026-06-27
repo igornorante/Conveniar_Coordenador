@@ -11,6 +11,7 @@ import androidx.work.WorkerParameters;
 import com.example.conveniar_coordenador.database.AppDAO;
 import com.example.conveniar_coordenador.database.AppDatabase;
 import com.example.conveniar_coordenador.database.PedidoEntity;
+import com.example.conveniar_coordenador.database.PedidoPagamentoEntity;
 import com.example.conveniar_coordenador.database.ProjetoEntity;
 
 import org.json.JSONArray;
@@ -157,12 +158,14 @@ public class ApiCheckWorker extends Worker {
                                                 boolean isPrimeiraSyncPedidos = prefs.getBoolean("primeira_sync_pedidos", true);
                                                 List<String> nomesPedidosAlterados = new ArrayList<>(); // Lista para guardar os nomes
 
+
+                                                //INSERIR AQUI AS CHAVES DO JSON QUE DEVEM VIRAR COLUNAS NO DB
                                                 for (int i = 0; i < arrayPedidos.length(); i++) {
                                                     JSONObject obj = arrayPedidos.getJSONObject(i);
                                                     String numPedido = obj.optString("numeroPedido"); // Chave corrigida!
                                                     String situacaoNova = obj.optString("situacao", obj.optString("status", "semStatus")); // Mantenha assim se não soubermos a exata ainda
                                                     String nomePedido = obj.optString("produto", "Pedido #" + numPedido); // Chave do nome corrigida!
-                                                    String tipoPedido = obj.optString("nomeTipoPedido", "Outros");
+                                                    String codProjeto = obj.optString("projeto", "-1");
 
                                                     if (numPedido.isEmpty()) {
                                                         Log.w("WORKER_DEBUG", "ALERTA: Pedido ignorado porque 'numeroPedido' está vazio! Dados crus: " + obj.toString());
@@ -183,7 +186,7 @@ public class ApiCheckWorker extends Worker {
                                                     PedidoEntity novoPedido = new PedidoEntity();
                                                     novoPedido.numPedido = numPedido;
                                                     novoPedido.situacao = situacaoNova;
-                                                    novoPedido.nomeTipoPedido = tipoPedido;
+                                                    novoPedido.codProjeto = codProjeto;
                                                     novoPedido.precisaAtencao = (pedidoSalvo != null && pedidoSalvo.precisaAtencao) || precisaAcao;
                                                     novoPedido.jsonOriginal = obj.toString();
 
@@ -220,6 +223,86 @@ public class ApiCheckWorker extends Worker {
                                     }
                                 }
                         );
+
+                        // --- 3. BUSCA E PROCESSA OS PEDIDOS DE PAGAMENTO ---
+                        // Passando os parâmetros na mesma ordem do seu método getPedidosPagamento:
+                        // token, nomeTipoPedido, codProjeto, numPedido, nomeFavo, dataInicial, valorPedido, status, dataFinal, meusPedidos, callback
+                        Coordenador.getPedidosPagamento(novoToken, null, null, null, null, null, null, null, null, true, new Callback() {
+                            @Override
+                            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                                Log.e("WORKER_API", "Erro ao buscar pedidos de pagamento: " + e.getMessage());
+                                resultadoFinal[0] = Result.retry();
+                                latch.countDown();
+                            }
+
+                            @Override
+                            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                                try {
+                                    if (response.isSuccessful() && response.body() != null) {
+                                        String jsonPagamentos = response.body().string();
+                                        JSONArray arrayPagamentos = new JSONArray(jsonPagamentos);
+
+                                        boolean isPrimeiraSync = prefs.getBoolean("primeira_sync_pagamentos", true);
+                                        List<String> nomesAlterados = new ArrayList<>();
+
+                                        for (int i = 0; i < arrayPagamentos.length(); i++) {
+                                            JSONObject obj = arrayPagamentos.getJSONObject(i);
+
+                                            // Lendo as chaves exatas do seu JSON
+                                            String numeroPedido = obj.optString("numeroPedido");
+                                            String nomeStatus = obj.optString("nomeStatus", "Sem Status");
+                                            String tipoPedido = obj.optString("nomeTipoPedido", "Sem Tipo");
+                                            String nomeFavorecido = obj.optString("nomeFavorecido", "Sem Favorecido");
+
+                                            // Se não tiver ID válido, pula para evitar erro no banco
+                                            if (numeroPedido.isEmpty() || numeroPedido.equals("0")) {
+                                                Log.w("WORKER_DEBUG", "Pedido de Pagamento ignorado - numeroPedido inválido: " + obj.toString());
+                                                continue;
+                                            }
+
+                                            PedidoPagamentoEntity pedidoSalvo = dao.getPedidoPagamentoById(numeroPedido);
+                                            boolean precisaAcao = false;
+
+                                            if (pedidoSalvo == null) {
+                                                precisaAcao = true; // Novo pagamento
+                                                nomesAlterados.add(numeroPedido + " (" + tipoPedido + ")");
+                                            } else if (!pedidoSalvo.nomeStatus.equals(nomeStatus)) {
+                                                precisaAcao = true; // Status mudou
+                                                nomesAlterados.add(numeroPedido + " (" + tipoPedido + ")");
+                                            }
+
+                                            PedidoPagamentoEntity novoPagamento = new PedidoPagamentoEntity();
+                                            novoPagamento.numeroPedido = numeroPedido;
+                                            novoPagamento.nomeTipoPedido = tipoPedido;
+                                            novoPagamento.nomeStatus = nomeStatus;
+                                            novoPagamento.nomeFavorecido = nomeFavorecido;
+                                            novoPagamento.jsonOriginal = obj.toString();
+                                            novoPagamento.precisaAtencao = (pedidoSalvo != null && pedidoSalvo.precisaAtencao) || precisaAcao;
+
+                                            dao.salvarPedidoPagamento(novoPagamento);
+                                        }
+
+                                        if (!nomesAlterados.isEmpty() && !isPrimeiraSync) {
+                                            String msg = nomesAlterados.size() == 1
+                                                    ? "Atualização no pagamento: " + nomesAlterados.get(0)
+                                                    : nomesAlterados.size() + " pagamentos atualizados, incluindo: " + nomesAlterados.get(0);
+
+                                            NotificationHelper notificacao = new NotificationHelper(getApplicationContext());
+                                            notificacao.enviarNotificacao("Atualização de Pagamentos", msg);
+                                        }
+
+                                        if (isPrimeiraSync) {
+                                            prefs.edit().putBoolean("primeira_sync_pagamentos", false).apply();
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    Log.e("WORKER_API", "Erro ao processar Pedidos de Pagamento no banco: " + e.getMessage());
+                                } finally {
+                                    latch.countDown();
+                                }
+                            }
+                        });
+
                     }
                 });
             }

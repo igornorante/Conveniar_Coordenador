@@ -8,8 +8,8 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import com.example.conveniar_coordenador.SecurePrefsManager;
 
-// Se você adicionar mais tabelas no futuro, basta incluí-las no array 'entities'
-@Database(entities = {ProjetoEntity.class, PedidoEntity.class}, version = 1, exportSchema = false)
+// Caso alguém
+@Database(entities = {ProjetoEntity.class, PedidoEntity.class, PedidoPagamentoEntity.class}, version = 2, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract AppDAO appDao();

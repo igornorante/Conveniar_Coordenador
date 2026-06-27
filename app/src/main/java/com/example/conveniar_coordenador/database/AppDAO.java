@@ -53,6 +53,25 @@ public interface AppDAO {
     LiveData<List<PedidoEntity>> getTodosPedidosLive();
 
     // Retorna uma lista observável de pedidos filtrada pelo tipo exato
-    @Query("SELECT * FROM pedidos WHERE nomeTipoPedido = :tipo")
-    LiveData<List<PedidoEntity>> getPedidosPorTipoLive(String tipo);
+    @Query("SELECT * FROM pedidos WHERE situacao = :situacao")
+    LiveData<List<PedidoEntity>> getPedidosPorSituacao(String situacao);
+    // Registrado, Enviado, Aprovado, Em Cotação, Aguardando parecer técnico, Aguardando liberação de recurso, Aguardando emissão de AF/OS, Aguardando chegada da mercadoria, Recebido parcialmente, Devolvido, Finalizado, Cancelado, Reprovado
+
+
+
+    // --- Pedidos de Compra ---
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void salvarPedidoPagamento(PedidoPagamentoEntity pedido);
+
+    @Query("SELECT * FROM pedidos_pagamento WHERE numeroPedido = :id")
+    PedidoPagamentoEntity getPedidoPagamentoById(String id);
+
+    // O método mágico que já filtra direto no banco de dados!
+    @Query("SELECT * FROM pedidos_pagamento WHERE nomeTipoPedido = :tipo")
+    LiveData<List<PedidoPagamentoEntity>> getPedidosPagamentoPorTipoLive(String tipo);
+    //
+
+    @Query("SELECT * FROM pedidos_pagamento")
+    LiveData<List<PedidoPagamentoEntity>> getTodosPedidosPagamentoLive();
+
 }
