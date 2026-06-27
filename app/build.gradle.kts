@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.annotationProcessor
+import org.gradle.kotlin.dsl.implementation
 import java.util.Properties
 
 plugins {
@@ -66,4 +68,7 @@ dependencies {
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0") // Para Gráficos
     implementation("androidx.work:work-runtime:2.9.0") //para fazer requisições a API em segundo plano
     implementation("androidx.security:security-crypto:1.1.0-alpha06")//para guardar as informações de login de forma encriptada
+
+    implementation("androidx.room:room-runtime:2.6.1")
+    annotationProcessor("androidx.room:room-compiler:2.6.1")
 }

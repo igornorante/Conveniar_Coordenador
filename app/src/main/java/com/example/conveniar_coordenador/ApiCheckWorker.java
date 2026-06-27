@@ -8,6 +8,16 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.example.conveniar_coordenador.database.AppDAO;
+import com.example.conveniar_coordenador.database.AppDatabase;
+import com.example.conveniar_coordenador.database.PedidoEntity;
+import com.example.conveniar_coordenador.database.ProjetoEntity;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import java.util.ArrayList;
+import java.util.List;
+
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -25,6 +35,7 @@ public class ApiCheckWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
+        Log.d("WORKER_DEBUG", "1. Worker INICIADO. Preparando para ler SharedPreferences.");
         SharedPreferences prefs = SecurePrefsManager.get(getApplicationContext());
 
         if (prefs == null) {
@@ -40,50 +51,90 @@ public class ApiCheckWorker extends Worker {
             return Result.failure();
         }
 
+        // Instancia o banco de dados e o DAO
+        AppDAO dao = AppDatabase.getDatabase(getApplicationContext()).appDao();
+
         CountDownLatch latch = new CountDownLatch(1);
         final Result[] resultadoFinal = new Result[]{Result.retry()};
 
-        // 2. Gera um novo token
         TokenGenerator.gerarToken(user, pass, new TokenGenerator.TokenCallback() {
             @Override
             public void onTokenGerado(String novoToken) {
                 prefs.edit().putString("token_acesso", novoToken).apply();
 
-                // 3. Busca os PROJETOS
+                // --- 1. BUSCA E PROCESSA OS PROJETOS ---
                 Coordenador.getProjetos(novoToken, null, "Ativo", 1, 50, new Callback() {
                     @Override
                     public void onFailure(@NonNull Call call, @NonNull IOException e) {
                         Log.e("WORKER_API", "Erro ao buscar projetos: " + e.getMessage());
                         resultadoFinal[0] = Result.retry();
-                        latch.countDown(); // Libera o Worker (Falha na rede)
+                        latch.countDown();
                     }
 
                     @Override
                     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                        Log.d("WORKER_DEBUG", "4. Resposta da API de Projetos recebida. Código: " + response.code());
                         try {
                             if (response.isSuccessful() && response.body() != null) {
+                                //versão nova
+
                                 String jsonProjetos = response.body().string();
-                                String jsonProjetosAntigo = prefs.getString("ultima_resposta_projetos", "");
+                                Log.d("WORKER_DEBUG", "JSON de Projetos recebido: " + jsonProjetos.substring(0, Math.min(jsonProjetos.length(), 200)) + "...");
+                                JSONArray arrayProjetos = new JSONArray(jsonProjetos);
 
-                                if (!jsonProjetos.equals(jsonProjetosAntigo)) {
-                                    prefs.edit().putString("ultima_resposta_projetos", jsonProjetos).apply();
+                                boolean isPrimeiraSyncProjetos = prefs.getBoolean("primeira_sync_projetos", true);
+                                List<String> nomesProjetosAlterados = new ArrayList<>(); // Lista para guardar os nomes
 
-                                    if (!jsonProjetosAntigo.isEmpty()) {
-                                        NotificationHelper notificacao = new NotificationHelper(getApplicationContext());
-                                        notificacao.enviarNotificacao(
-                                                "Novos Projetos",
-                                                "Sua lista de projetos ativos foi atualizada."
-                                        );
+                                for (int i = 0; i < arrayProjetos.length(); i++) {
+                                    JSONObject obj = arrayProjetos.getJSONObject(i);
+                                    String idProjeto = obj.optString("codConvenio");
+                                    String situacaoNova = obj.optString("nomeStatus", "Sem Status");
+                                    String nomeProjeto = obj.optString("nomeConvenio", "Projeto " + idProjeto);
+
+                                    if (idProjeto.isEmpty()) continue;
+
+                                    ProjetoEntity projetoSalvo = dao.getProjetoById(idProjeto);
+                                    boolean precisaAcao = false;
+
+                                    if (projetoSalvo == null) {
+                                        precisaAcao = true; // Projeto novo
+                                        nomesProjetosAlterados.add(nomeProjeto);
+                                    } else if (!projetoSalvo.situacao.equals(situacaoNova)) {
+                                        precisaAcao = true; // Status mudou
+                                        nomesProjetosAlterados.add(nomeProjeto);
                                     }
+
+                                    ProjetoEntity novoProjeto = new ProjetoEntity();
+                                    novoProjeto.idProjeto = idProjeto;
+                                    novoProjeto.situacao = situacaoNova;
+                                    novoProjeto.precisaAtencao = (projetoSalvo != null && projetoSalvo.precisaAtencao) || precisaAcao;
+                                    novoProjeto.jsonOriginal = obj.toString();
+
+                                    dao.salvarProjeto(novoProjeto);
                                 }
-                            } else {
-                                Log.e("WORKER_API", "Falha na requisição de projetos. Código: " + response.code());
+
+                                // Dispara a notificação inteligente
+                                if (!nomesProjetosAlterados.isEmpty() && !isPrimeiraSyncProjetos) {
+                                    String mensagem;
+                                    if (nomesProjetosAlterados.size() == 1) {
+                                        mensagem = "O projeto '" + nomesProjetosAlterados.get(0) + "' teve alterações.";
+                                    } else {
+                                        mensagem = nomesProjetosAlterados.size() + " projetos tiveram alterações, incluindo '" + nomesProjetosAlterados.get(0) + "'.";
+                                    }
+
+                                    NotificationHelper notificacao = new NotificationHelper(getApplicationContext());
+                                    notificacao.enviarNotificacao("Atualização em Projetos", mensagem);
+                                }
+
+                                if (isPrimeiraSyncProjetos) {
+                                    prefs.edit().putBoolean("primeira_sync_projetos", false).apply();
+                                }
                             }
                         } catch (Exception e) {
-                            Log.e("WORKER_API", "Erro ao processar JSON de Projetos: " + e.getMessage());
+                            Log.e("WORKER_API", "Erro ao processar Projetos no banco: " + e.getMessage());
                         }
 
-                        // 4. AGORA BUSCA OS PEDIDOS (Usamos "true" no 10º parâmetro para flagMeusPedidos)
+                        // --- 2. BUSCA E PROCESSA OS PEDIDOS ---
                         Coordenador.getPedidosCompraServico(
                                 novoToken, null, null, null, null, null, null, null, null, true, null, null,
                                 new Callback() {
@@ -91,37 +142,77 @@ public class ApiCheckWorker extends Worker {
                                     public void onFailure(@NonNull Call call, @NonNull IOException e) {
                                         Log.e("WORKER_API", "Erro ao buscar pedidos: " + e.getMessage());
                                         resultadoFinal[0] = Result.retry();
-                                        latch.countDown(); // Libera o Worker
+                                        latch.countDown();
                                     }
 
                                     @Override
                                     public void onResponse(@NonNull Call call, @NonNull Response responsePedidos) throws IOException {
                                         try {
                                             if (responsePedidos.isSuccessful() && responsePedidos.body() != null) {
+                                                Log.d("WORKER_DEBUG", "6. Resposta da API de Pedidos recebida. Código: " + responsePedidos.code());
                                                 String jsonPedidos = responsePedidos.body().string();
-                                                String jsonPedidosAntigo = prefs.getString("ultima_resposta_pedidos", "");
+                                                Log.d("WORKER_DEBUG", "JSON de Pedidos recebido: " + jsonPedidos.substring(0, Math.min(jsonPedidos.length(), 200)) + "...");
+                                                JSONArray arrayPedidos = new JSONArray(jsonPedidos);
 
-                                                if (!jsonPedidos.equals(jsonPedidosAntigo)) {
-                                                    prefs.edit().putString("ultima_resposta_pedidos", jsonPedidos).apply();
+                                                boolean isPrimeiraSyncPedidos = prefs.getBoolean("primeira_sync_pedidos", true);
+                                                List<String> nomesPedidosAlterados = new ArrayList<>(); // Lista para guardar os nomes
 
-                                                    if (!jsonPedidosAntigo.isEmpty()) {
-                                                        NotificationHelper notificacao = new NotificationHelper(getApplicationContext());
-                                                        notificacao.enviarNotificacao(
-                                                                "Atualização em Pedidos",
-                                                                "Houve uma alteração nos seus pedidos."
-                                                        );
+                                                for (int i = 0; i < arrayPedidos.length(); i++) {
+                                                    JSONObject obj = arrayPedidos.getJSONObject(i);
+                                                    String numPedido = obj.optString("numeroPedido"); // Chave corrigida!
+                                                    String situacaoNova = obj.optString("situacao", obj.optString("status", "semStatus")); // Mantenha assim se não soubermos a exata ainda
+                                                    String nomePedido = obj.optString("produto", "Pedido #" + numPedido); // Chave do nome corrigida!
+
+                                                    if (numPedido.isEmpty()) {
+                                                        Log.w("WORKER_DEBUG", "ALERTA: Pedido ignorado porque 'numeroPedido' está vazio! Dados crus: " + obj.toString());
+                                                        continue;
                                                     }
+
+                                                    PedidoEntity pedidoSalvo = dao.getPedidoById(numPedido);
+                                                    boolean precisaAcao = false;
+
+                                                    if (pedidoSalvo == null) {
+                                                        precisaAcao = true; // Pedido novo
+                                                        nomesPedidosAlterados.add(nomePedido);
+                                                    } else if (!pedidoSalvo.situacao.equals(situacaoNova)) {
+                                                        precisaAcao = true; // Status mudou
+                                                        nomesPedidosAlterados.add(nomePedido);
+                                                    }
+
+                                                    PedidoEntity novoPedido = new PedidoEntity();
+                                                    novoPedido.numPedido = numPedido;
+                                                    novoPedido.situacao = situacaoNova;
+                                                    novoPedido.precisaAtencao = (pedidoSalvo != null && pedidoSalvo.precisaAtencao) || precisaAcao;
+                                                    novoPedido.jsonOriginal = obj.toString();
+
+                                                    dao.salvarPedido(novoPedido);
                                                 }
-                                                resultadoFinal[0] = Result.success(); // Ambas as consultas foram feitas
+
+                                                if (!nomesPedidosAlterados.isEmpty() && !isPrimeiraSyncPedidos) {
+                                                    String mensagem;
+                                                    if (nomesPedidosAlterados.size() == 1) {
+                                                        mensagem = "O pedido '" + nomesPedidosAlterados.get(0) + "' teve alterações.";
+                                                    } else {
+                                                        mensagem = nomesPedidosAlterados.size() + " pedidos tiveram alterações, incluindo '" + nomesPedidosAlterados.get(0) + "'.";
+                                                    }
+
+                                                    NotificationHelper notificacao = new NotificationHelper(getApplicationContext());
+                                                    notificacao.enviarNotificacao("Atualização em Pedidos", mensagem);
+                                                }
+
+                                                if (isPrimeiraSyncPedidos) {
+                                                    prefs.edit().putBoolean("primeira_sync_pedidos", false).apply();
+                                                }
+
+                                                resultadoFinal[0] = Result.success();
+
                                             } else {
-                                                Log.e("WORKER_API", "Falha na requisição de pedidos. Código: " + responsePedidos.code());
                                                 resultadoFinal[0] = Result.retry();
                                             }
                                         } catch (Exception e) {
-                                            Log.e("WORKER_API", "Erro ao processar JSON de Pedidos: " + e.getMessage());
+                                            Log.e("WORKER_API", "Erro ao processar Pedidos no banco: " + e.getMessage());
                                             resultadoFinal[0] = Result.failure();
                                         } finally {
-                                            // FINALIZA A CORRENTE E LIBERA O WORKER
                                             latch.countDown();
                                         }
                                     }

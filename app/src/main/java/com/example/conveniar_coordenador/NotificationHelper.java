@@ -10,6 +10,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import android.app.PendingIntent;
+import android.content.Intent;
+
 public class NotificationHelper {
 
     private final Context context;
@@ -39,11 +42,26 @@ public class NotificationHelper {
 
     // Constrói e dispara a notificação
     public void enviarNotificacao(String titulo, String mensagem) {
+        //M1: mudanças para permitir à notificação a abrir o aplicativo
+        Intent intent = new Intent(context, LoginActivity.class);
+
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                context,
+                0,
+                intent,
+                PendingIntent.FLAG_IMMUTABLE
+        );
+
+
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(android.R.drawable.ic_dialog_info) // Substitua pelo ícone do seu app
                 .setContentTitle(titulo)
                 .setContentText(mensagem)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent) //M1
                 .setAutoCancel(true); // A notificação some quando o usuário clica nela
 
         // Verifica a permissão para Android 13+ antes de enviar
