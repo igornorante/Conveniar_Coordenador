@@ -9,13 +9,15 @@ public class PedidoEntity {
 
     @PrimaryKey
     @NonNull
-    public String numPedido; // ID único do pedido
+    public String numPedido; // Ex: 123/2024
+
+    public int codPedido; // ID interno numérico para links
 
     public String situacao;
 
     public String codProjeto;
 
-    public boolean precisaAtencao; // Para a sua View de Atenção
+    public boolean precisaAtencao;
 
     public String jsonOriginal;
 

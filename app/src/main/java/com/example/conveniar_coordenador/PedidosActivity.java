@@ -36,58 +36,62 @@ public class PedidosActivity extends BaseActivity {
     }
 
     private void configurarCliques() {
-        // Vincula cada Card ao seu respectivo link do portal abrindo na WebView interna
-        binding.cardCompra.setOnClickListener(v -> Navegar_Portal(0));
-        binding.cardAdiantamento.setOnClickListener(v -> Navegar_Portal(1));
+        binding.cardCompra.setOnClickListener(v -> abrirListaPedidos("Pedido de Compra/Serviço", 0));
+        binding.cardAdiantamento.setOnClickListener(v -> abrirListaPedidos("Pedido de Adiantamento", 1));
         
         if (binding.cardAcertoAdiantamento != null) {
-            binding.cardAcertoAdiantamento.setOnClickListener(v -> Navegar_Portal(2));
+            binding.cardAcertoAdiantamento.setOnClickListener(v -> abrirListaPedidos("Pedido de Acerto de Adiantamento", 2));
         }
         
-        binding.cardReembolso.setOnClickListener(v -> Navegar_Portal(3));
-        binding.cardDiaria.setOnClickListener(v -> Navegar_Portal(4));
+        binding.cardReembolso.setOnClickListener(v -> abrirListaPedidos("Pedido de Reembolso", 3));
+        binding.cardDiaria.setOnClickListener(v -> abrirListaPedidos("Pagamento Diária", 4));
         
         if (binding.cardBolsa != null) {
-            binding.cardBolsa.setOnClickListener(v -> Navegar_Portal(5));
+            binding.cardBolsa.setOnClickListener(v -> abrirListaPedidos("Pagamento Bolsa", 5));
         }
         
-        binding.cardPagPf.setOnClickListener(v -> Navegar_Portal(7));
-        binding.cardPagPj.setOnClickListener(v -> Navegar_Portal(6));
+        binding.cardPagPf.setOnClickListener(v -> abrirListaPedidos("Pagamento Pessoa Física", 7));
+        binding.cardPagPj.setOnClickListener(v -> abrirListaPedidos("Pagamento Pessoa Jurídica", 6));
         
-        if (binding.cardReceita != null) binding.cardReceita.setOnClickListener(v -> Navegar_Portal(8));
-        if (binding.cardTransferencia != null) binding.cardTransferencia.setOnClickListener(v -> Navegar_Portal(9));
-        if (binding.cardParecer != null) binding.cardParecer.setOnClickListener(v -> Navegar_Portal(10));
-        if (binding.cardBolsaLote != null) binding.cardBolsaLote.setOnClickListener(v -> Navegar_Portal(11));
-        if (binding.cardOrdem != null) binding.cardOrdem.setOnClickListener(v -> Navegar_Portal(12));
-        if (binding.cardContratacao != null) binding.cardContratacao.setOnClickListener(v -> Navegar_Portal(13));
+        if (binding.cardReceita != null) binding.cardReceita.setOnClickListener(v -> abrirListaPedidos("Entrada de Receita", 8));
+        if (binding.cardTransferencia != null) binding.cardTransferencia.setOnClickListener(v -> abrirListaPedidos("Pedido de Transferência entre Projetos", 9));
+        if (binding.cardParecer != null) binding.cardParecer.setOnClickListener(v -> abrirListaPedidos("Pedido Parecer Técnico", 10));
+        if (binding.cardBolsaLote != null) binding.cardBolsaLote.setOnClickListener(v -> abrirListaPedidos("Pagamento Bolsa em Lote", 11));
+        if (binding.cardOrdem != null) binding.cardOrdem.setOnClickListener(v -> abrirListaPedidos("Ordens de Pagamento", 12));
+        if (binding.cardContratacao != null) binding.cardContratacao.setOnClickListener(v -> abrirListaPedidos("Pedido Contratação", 13));
     }
 
-    public void Navegar_Portal(int posicao) {
-        String url;
-        switch (posicao) {
-            case 0: url = "https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PedidoCompra.aspx"; break;
-            case 1: url = "https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PagamentoAdiantamento.aspx"; break;
-            case 2: url = "https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PedidoAcertoAdiantamento.aspx"; break;
-            case 3: url = "https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PagamentoReembolso.aspx"; break;
-            case 4: url = "https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PagamentoDiaria.aspx"; break;
-            case 5: url = "https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PagamentoBolsa.aspx"; break;
-            case 6: url = "https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PagamentoPessoaJuridica.aspx"; break;
-            case 7: url = "https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PagamentoPessoaFisica.aspx"; break;
-            case 8: url = "https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/EntradaDeReceita.aspx"; break;
-            case 9: url = "https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PagamentoTransferencia.aspx"; break;
-            case 10: url = "https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PedidoParecerTecnico.aspx"; break;
-            case 11: url = "https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PagamentoBolsaLote.aspx"; break;
-            case 12: url = "https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/OPCompraAF.aspx"; break;
-            case 13: url = "https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PedidoContratacao.aspx"; break;
-            default:
-                Toast.makeText(this, "Opção inválida", Toast.LENGTH_SHORT).show();
-                return;
+    private void abrirListaPedidos(String nomeTipo, int posicaoUrl) {
+        String urlNovo = getUrlPorPosicao(posicaoUrl);
+        if (urlNovo.isEmpty()) {
+            Toast.makeText(this, "Opção inválida", Toast.LENGTH_SHORT).show();
+            return;
         }
 
-        // Abrir na WebViewActivity interna do aplicativo passando o TOKEN
-        Intent intent = new Intent(this, WebViewActivity.class);
-        intent.putExtra("URL", url);
+        Intent intent = new Intent(this, PedidosListaActivity.class);
+        intent.putExtra("TIPO_NOME", nomeTipo);
+        intent.putExtra("URL_NOVO", urlNovo);
         intent.putExtra("TOKEN", token);
         startActivity(intent);
+    }
+
+    private String getUrlPorPosicao(int posicao) {
+        switch (posicao) {
+            case 0: return "https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PedidoCompra.aspx";
+            case 1: return "https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PagamentoAdiantamento.aspx";
+            case 2: return "https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PedidoAcertoAdiantamento.aspx";
+            case 3: return "https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PagamentoReembolso.aspx";
+            case 4: return "https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PagamentoDiaria.aspx";
+            case 5: return "https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PagamentoBolsa.aspx";
+            case 6: return "https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PagamentoPessoaJuridica.aspx";
+            case 7: return "https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PagamentoPessoaFisica.aspx";
+            case 8: return "https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/EntradaDeReceita.aspx";
+            case 9: return "https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PagamentoTransferencia.aspx";
+            case 10: return "https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PedidoParecerTecnico.aspx";
+            case 11: return "https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PagamentoBolsaLote.aspx";
+            case 12: return "https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/OPCompraAF.aspx";
+            case 13: return "https://cientec.conveniar.com.br/Coordenador/Forms/Pesquisador/PedidoContratacao.aspx";
+            default: return "";
+        }
     }
 }

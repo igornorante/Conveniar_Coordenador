@@ -267,11 +267,15 @@
                     android:columnCount="3"
                     android:alignmentMode="alignMargins">
                     <androidx.cardview.widget.CardView
+                        android:id="@+id/btn_pendencias"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
                         android:layout_margin="4dp"
-                        app:cardCornerRadius="12dp">
+                        app:cardCornerRadius="12dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground">
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -282,7 +286,7 @@
                                 android:id="@+id/dash_count_pendencias"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="--"
+                                android:text="0"
                                 android:textSize="18sp"
                                 android:textStyle="bold"
                                 android:textColor="#E67E22"/>
@@ -295,6 +299,7 @@
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
                     <androidx.cardview.widget.CardView
+                        android:id="@+id/card_vencendo"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
@@ -323,6 +328,7 @@
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
                     <androidx.cardview.widget.CardView
+                        android:id="@+id/card_critico"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
@@ -351,6 +357,37 @@
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
                 </GridLayout>
+
+                <!-- NOVO: RESUMO DE PENDÊNCIAS POR CATEGORIA -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pendências por Categoria"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#333333"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="12dp"/>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="12dp">
+                    <LinearLayout
+                        android:id="@+id/layout_resumo_pendencias"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="8dp">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Analisando categorias..."
+                            android:gravity="center"
+                            android:padding="16dp"
+                            android:textColor="#999999"/>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
 
                 <!-- 4. GRÁFICOS -->
                 <TextView

@@ -21,14 +21,13 @@
             android:gravity="center_vertical"
             android:background="?attr/selectableItemBackground">
 
-            <TextView
-                android:id="@+id/txt_count_grupo"
-                android:layout_width="24dp"
-                android:layout_height="wrap_content"
-                android:text="0"
-                android:textSize="14sp"
-                android:textColor="@color/azul_conveniar"
-                android:textStyle="bold" />
+            <ImageView
+                android:id="@+id/img_categoria_icone"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/icone_pedido"
+                app:tint="@color/azul_conveniar"
+                android:layout_marginEnd="12dp"/>
 
             <TextView
                 android:id="@+id/txt_titulo_grupo"
@@ -38,16 +37,29 @@
                 android:text="Título do Grupo"
                 android:textSize="14sp"
                 android:textColor="#333333"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txt_count_grupo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="13sp"
+                android:textColor="@color/azul_conveniar"
                 android:textStyle="bold"
-                android:layout_marginStart="8dp" />
+                android:background="@drawable/bg_status_pendencia"
+                android:backgroundTint="#E3F2FD"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="2dp"
+                android:layout_marginEnd="8dp"/>
 
             <ImageView
                 android:id="@+id/img_chevron"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:src="@drawable/ic_chevron_down"
-                app:tint="#666666"
-                android:contentDescription="Expandir ou recolher" />
+                app:tint="#999999"
+                android:contentDescription="Expandir" />
         </LinearLayout>
 
         <LinearLayout
@@ -55,7 +67,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingStart="48dp"
+            android:paddingStart="56dp"
             android:paddingEnd="16dp"
             android:paddingBottom="16dp"
             android:visibility="gone">

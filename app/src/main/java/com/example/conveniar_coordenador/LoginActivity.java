@@ -34,6 +34,7 @@ import okhttp3.Response;
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 import java.util.concurrent.TimeUnit;
@@ -56,24 +57,20 @@ public class LoginActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_DENIED) {
-                // Não tem permissão, vamos pedir ao usuário
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, CODIGO_PERMISSAO_NOTIFICACAO);
             }
         }
 
-        // 1. Criar restrições (ex: só rodar se tiver internet)
+        // Configuração do Worker Periódico
         Constraints restricoes = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build();
 
-        // 2. Configurar a frequência (IMPORTANTE: O mínimo que o Android permite são 15 minutos)
         PeriodicWorkRequest apiCheckRequest = new PeriodicWorkRequest.Builder(
                 ApiCheckWorker.class,
-                15, TimeUnit.MINUTES // Tenta rodar a cada 15 minutos
+                15, TimeUnit.MINUTES
         ).setConstraints(restricoes).build();
 
-        // 3. Enviar para o WorkManager
-        // Usamos "KEEP" para garantir que, se o agendamento já existir, ele não recrie um novo do zero.
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
                 "VerificacaoDeApi",
                 ExistingPeriodicWorkPolicy.KEEP,
@@ -109,9 +106,6 @@ public class LoginActivity extends AppCompatActivity {
             TokenGenerator.gerarToken(user, pass, new TokenGenerator.TokenCallback() {
                 @Override
                 public void onTokenGerado(String token) {
-                    Log.d("FLUXO_API", "Token gerado com sucesso. Buscando nome...");
-
-                    //Coloca o token gerado no shared preferences, o qual será utilizado para as consultas em segundo plano, as quais serão responsáveis por gerar notificações
                     SharedPreferences securePrefs = SecurePrefsManager.get(LoginActivity.this);
                     if (securePrefs != null) {
                         securePrefs.edit()
@@ -120,11 +114,18 @@ public class LoginActivity extends AppCompatActivity {
                                 .apply();
                     }
 
-                    // Tenta buscar o nome do coordenador, mas entra no app mesmo se essa chamada falhar
+                    // Dispara sincronização imediata após login bem-sucedido
+                    Constraints constraints = new Constraints.Builder()
+                            .setRequiredNetworkType(NetworkType.CONNECTED)
+                            .build();
+                    OneTimeWorkRequest syncRequest = new OneTimeWorkRequest.Builder(ApiCheckWorker.class)
+                            .setConstraints(constraints)
+                            .build();
+                    WorkManager.getInstance(LoginActivity.this).enqueue(syncRequest);
+
                     Coordenador.getEventosUsuario(token, 1, 10, new okhttp3.Callback() {
                         @Override
                         public void onFailure(Call call, IOException e) {
-                            Log.e("FLUXO_API", "Falha ao buscar perfil, entrando com nome padrão", e);
                             entrarNoApp(token, "Coordenador");
                         }
 
@@ -147,35 +148,19 @@ public class LoginActivity extends AppCompatActivity {
 
                 @Override
                 public void onErro(String mensagem) {
-                    Log.e("FLUXO_API", "Erro no processo: " + mensagem);
-                    runOnUiThread(() -> {
-                        if (mensagem.contains("Unable to resolve host")) {
-                            Toast.makeText(LoginActivity.this, "Sem internet. Verifique sua conexão.", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(LoginActivity.this, mensagem, Toast.LENGTH_LONG).show();
-                        }
-                    });
+                    runOnUiThread(() -> Toast.makeText(LoginActivity.this, mensagem, Toast.LENGTH_LONG).show());
                 }
             });
         });
     }
 
     private void entrarNoApp(String token, String nome) {
-        // Salva o nome no SharedPreferences para o menu lateral
         getSharedPreferences("USUARIO", MODE_PRIVATE).edit().putString("NOME", nome).apply();
-
         runOnUiThread(() -> {
-            // Navega para a Dashboard (PrincipalActivity)
             Intent intent = new Intent(LoginActivity.this, PrincipalActivity.class);
             intent.putExtra("TOKEN", token);
             startActivity(intent);
-            finish(); // Fecha a tela de login
+            finish();
         });
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
     }
 }
