@@ -15,6 +15,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Conveniar_Coordenador">
         <activity
+            android:name=".PedidosListaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PendenciasDetalheActivity"
+            android:exported="false" />
+        <activity
             android:name=".WebViewActivity"
             android:exported="false" />
         <activity

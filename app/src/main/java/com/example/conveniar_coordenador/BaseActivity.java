@@ -145,9 +145,6 @@ public abstract class BaseActivity extends AppCompatActivity {
                     //fecha a conexão com o banco
                     AppDatabase.encerrarConexao();
 
-                    //A ideia dessa flag é impedir o usuário de voltar para dentro do aplicativo ao clicar no botão de voltar
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
                     intent = new Intent(this, LoginActivity.class);
                     finishAffinity();
                 }
