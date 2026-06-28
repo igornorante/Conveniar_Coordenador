@@ -23,8 +23,9 @@ Através dele é possível acompanhar, em tempo real, o saldo e extrato dos seus
 Caso seja necessário, solicite à fundação a criação de uma senha para a pessoa a quem deseja autorizar acesso aos seus projetos.\n
 O Conveniar sempre registra quem acessou o sistema, qual o computador utilizado e a data e hora do acesso.</string>
 
-    <string name="titulo_consulta">Consultar Pedidos de Compra/Serviço</string>
+    <string name="titulo_consulta">Consultar Pedidos</string>
     <string name="criterios_consulta">Critérios de Consulta</string>
+    <string name="tipo_consulta">Tipo de Consulta:</string>
     <string name="numero_pedido">Número Pedido:</string>
     <string name="projeto">Projeto:</string>
     <string name="listar_todos">Listar Todos</string>
@@ -39,4 +40,7 @@ O Conveniar sempre registra quem acessou o sistema, qual o computador utilizado 
     <string name="solicitante">Solicitante:</string>
     <string name="situacao">Situação:</string>
     <string name="botao_consultar">Consultar</string>
+    <string name="tipo_pedido">Tipo do Pedido:</string>
+    <string name="favorecido">Favorecido:</string>
+    <string name="valor_pedido">Valor do Pedido:</string>
 </resources>
