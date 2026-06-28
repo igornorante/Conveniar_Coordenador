@@ -6,36 +6,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/main"
+    <LinearLayout
+        android:id="@+id/main_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#F8FAFC">
 
-        <include
-            android:id="@+id/header_extrato"
-            layout="@layout/header_geral"/>
+        <include layout="@layout/header_geral" />
 
         <TextView
             android:id="@+id/txt_extrato_titulo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/header_extrato"
             android:background="@color/azul_conveniar"
+            android:padding="8dp"
             android:text="Extrato de Projetos"
-            android:textSize="25sp"
-            android:gravity="center"
-            android:padding="5dp"
-            android:textColor="@color/white"/>
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-        <LinearLayout
-            android:id="@+id/layout_filtros"
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/txt_extrato_titulo"
-            android:orientation="vertical"
-            android:padding="10dp"
-            android:background="#F8F8F8"
-            android:elevation="2dp">
+            android:layout_margin="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="@android:color/white">
+
+            <LinearLayout
+                android:id="@+id/layout_filtros"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -48,8 +53,8 @@
             <Spinner
                 android:id="@+id/spinner_projetos"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="@android:drawable/btn_dropdown"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
                 android:layout_marginBottom="10dp"/>
 
             <LinearLayout
@@ -86,35 +91,35 @@
                 android:id="@+id/btn_gerar_extrato"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="Gerar Extrato"
                 app:backgroundTint="@color/azul_conveniar"
                 android:textColor="@color/white"
                 android:textStyle="bold"/>
-        </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
         <ListView
             android:id="@+id/list_extrato"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/layout_filtros"
-
-            android:background="@android:color/white"
-            android:cacheColorHint="@android:color/white"
-
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@android:color/transparent"
+            android:cacheColorHint="@android:color/transparent"
             android:divider="#33000000"
             android:dividerHeight="1dp"/>
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigation_view"
         android:layout_width="280dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="#EDEDED"
+        android:fitsSystemWindows="true"
         app:headerLayout="@layout/header_menu_lateral"
-        app:itemIconTint="@null"
-        app:itemTextColor="@color/black"
-        app:menu="@menu/menu_lateral_opcoes"/>
+        app:menu="@menu/menu_lateral_opcoes" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

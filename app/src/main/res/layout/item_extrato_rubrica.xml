@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#ECEFF1"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="10dp"
+    android:layout_marginTop="8dp">
+
+    <TextView
+        android:id="@+id/txt_rubrica_nome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#37474F"
+        android:textSize="15sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/txt_rubrica_saldo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#607D8B"
+        android:textSize="13sp"
+        android:layout_marginTop="2dp"/>
+
+</LinearLayout>
