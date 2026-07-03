@@ -331,16 +331,8 @@
                     </LinearLayout>
 
                     <!-- Campos comuns -->
-                    <CheckBox
-                        android:id="@+id/chk_meus_pedidos"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/meus_pedidos"
-                        android:textColor="@color/black"
-                        android:textSize="12sp"
-                        android:layout_marginBottom="8dp"/>
 
-                    <!-- Situação -->
+                        <!-- Situação -->
                     <TextView
                         android:id="@+id/lbl_situacao"
                         android:layout_width="wrap_content"

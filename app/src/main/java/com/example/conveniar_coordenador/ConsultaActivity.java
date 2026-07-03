@@ -56,7 +56,7 @@ public class ConsultaActivity extends BaseActivity {
     // Layouts condicionais
     private LinearLayout layoutCamposCompra, layoutCamposPagamento;
     
-    private CheckBox chkListarTodos, chkMeusPedidos;
+    private CheckBox chkListarTodos;
     private Button btnConsultar;
     private ListView listView;
     private ConsultaAdapter adapterResultados;
@@ -109,7 +109,6 @@ public class ConsultaActivity extends BaseActivity {
         layoutCamposPagamento = findViewById(R.id.layout_campos_pagamento);
         
         chkListarTodos = findViewById(R.id.chk_listar_todos);
-        chkMeusPedidos = findViewById(R.id.chk_meus_pedidos);
         btnConsultar = findViewById(R.id.btn_consultar);
         listView = findViewById(R.id.list_consultas);
 
@@ -276,7 +275,7 @@ public class ConsultaActivity extends BaseActivity {
         String numProcesso = edtNumProcesso.getText().toString();
         String numAfOs = edtNumAfOs.getText().toString();
         String fornecedor = edtFornecedor.getText().toString();
-        boolean meusPedidos = chkMeusPedidos.isChecked();
+        boolean meusPedidos = true;
         String solicitante = edtSolicitante.getText().toString();
         String situacao = spinnerSituacao.getSelectedItemPosition() > 0 ? spinnerSituacao.getSelectedItem().toString() : "";
 
@@ -342,7 +341,7 @@ public class ConsultaActivity extends BaseActivity {
         String favorecido = edtFavorecido.getText().toString();
         String valorPedido = edtValorPedido.getText().toString();
         String situacao = spinnerSituacao.getSelectedItemPosition() > 0 ? spinnerSituacao.getSelectedItem().toString() : "";
-        boolean meusPedidos = chkMeusPedidos.isChecked();
+        boolean meusPedidos = true;
 
         Coordenador.getPedidosPagamento(token, tipoPedido, codProjetoFinal, numPedido, favorecido, dataInicio, valorPedido, situacao, dataFim, meusPedidos, new Callback() {
             @Override
